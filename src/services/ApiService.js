@@ -179,7 +179,7 @@ export default class ApiService {
         headers: this.getHeader(),
       }
     );
-    return response.data;
+    return response;
   }
 
   /* This  gets alll bokings from the database */

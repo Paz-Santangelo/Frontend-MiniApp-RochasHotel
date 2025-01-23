@@ -74,7 +74,7 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Lista de navegación */}
-          {!state.isAuthenticated ? (
+          {/* {!state.isAuthenticated ? ( */}
             <>
               <Box sx={styles.boxItemsNavigation}>
                 <List sx={styles.listItemsNavigation}>
@@ -102,7 +102,7 @@ const Navbar = () => {
                 <MenuIcon />
               </IconButton>
             </>
-          ) : (
+         {/*  ) : ( */}
             <IconButton
               onClick={handleLogout}
               sx={{ color: "white" }}
@@ -110,7 +110,7 @@ const Navbar = () => {
             >
               <LogoutIcon />
             </IconButton>
-          )}
+        {/*   )} */}
         </Toolbar>
       </AppBar>
     </Box>

@@ -11,7 +11,6 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const RoomsResult = ({ roomSearchResults }) => {
-
   const navigate = useNavigate();
 
   return (
@@ -19,12 +18,7 @@ const RoomsResult = ({ roomSearchResults }) => {
       {roomSearchResults.map((room) => (
         <Grid item xs={12} sm={6} md={4} key={room.id}>
           <Card
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              height: "100%",
-            }}
+            sx={styles.cardRoom}
           >
             <CardMedia
               component="img"
@@ -55,7 +49,7 @@ const RoomsResult = ({ roomSearchResults }) => {
                 sx={{ mr: 2, mb: 2 }}
                 onClick={() => navigate(`/detalles/${room.id}`)}
               >
-                Ver | Reservar
+                Ver
               </Button>
             </CardActions>
           </Card>
@@ -63,6 +57,16 @@ const RoomsResult = ({ roomSearchResults }) => {
       ))}
     </Grid>
   );
+};
+
+/** @type {import("@mui/material").SxProps}  */
+const styles = {
+  cardRoom: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    height: "100%",
+  },
 };
 
 export default RoomsResult;

@@ -5,6 +5,9 @@ export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
 export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const USER_IS_AUTHENTICATED = "USER_IS_AUTHENTICATED";
+export const USER_IS_ADMIN = "USER_IS_ADMIN";
+export const USER_IS_USER = "USER_IS_USER";
+export const USER_DATA = "USER_DATA";
 
 export const login = async (dispatch, loginDetails) => {
   dispatch({ type: USER_LOGIN_REQUEST });
@@ -41,6 +44,22 @@ export const logout = (dispatch) => {
 };
 
 export const isAuthenticated = (dispatch) => {
-  const isAuth = ApiService.isAuthenticated();
-  dispatch({ type: USER_IS_AUTHENTICATED, payload: isAuth });
+  const token = localStorage.getItem("token");
+  const authenticated = Boolean(token);
+  dispatch({ type: USER_IS_AUTHENTICATED, payload: authenticated });
+};
+
+export const isAdmin = (dispatch) => {
+  const isAdmin = ApiService.isAdmin();
+  dispatch({ type: USER_IS_ADMIN, payload: isAdmin });
+};
+
+export const isUser = (dispatch) => {
+  const isUser = ApiService.isUser();
+  dispatch({ type: USER_IS_USER, payload: isUser });
+};
+
+export const getUserData = async (dispatch) => {
+  const userData = await ApiService.getUserProfile();
+  dispatch({ type: USER_DATA, payload: userData });
 };
