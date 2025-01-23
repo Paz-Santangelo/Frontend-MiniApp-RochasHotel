@@ -14,7 +14,9 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Footer from "./components/Footer";
 import RoomsPage from "./pages/RoomsPage";
-
+import RoomDetailsPage from "./pages/RoomDetailsPage";
+import { ProtectedRoute } from "./services/guard";
+import DashboardPage from "./pages/DashboardPage";
 
 function App() {
   return (
@@ -28,6 +30,13 @@ function App() {
           <Route path="/habitaciones" element={<RoomsPage />} />
           <Route path="/registrate" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/detalles/:roomId" element={<RoomDetailsPage />} />
+          
+          {/* Rutas Protegidas */}
+          <Route
+            path="/dashboard"
+            element={<ProtectedRoute element={<DashboardPage />} />}
+          />
         </Routes>
         <Footer />
       </BrowserRouter>

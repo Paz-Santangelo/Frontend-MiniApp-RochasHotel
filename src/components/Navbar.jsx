@@ -9,8 +9,13 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
 import LogoHotel from "../assets/logo-hotel.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useReducer } from "react";
+import { initialUserState, userReducer } from "../reducers/userReducer";
+import { isAuthenticated, logout } from "../actions/userActions";
+import ApiService from "../services/ApiService";
 
 /* cuando el usuario está logueando se deben ocultar los links y que esté únicamente el botón de cerrar sesión */
 
@@ -39,6 +44,20 @@ const pages = [
 ];
 
 const Navbar = () => {
+  const [state, dispatch] = useReducer(userReducer, initialUserState);
+  const navigate = useNavigate();
+
+  const token = ApiService.isAuthenticated();
+
+  useEffect(() => {
+    isAuthenticated(dispatch);
+  }, [token, state.isAuthenticated]);
+
+
+  const handleLogout = () => {
+    logout(dispatch);
+    navigate("/");
+  };
   return (
     <Box>
       <AppBar component="nav" sx={styles.appBar}>
@@ -55,31 +74,43 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           {/* Lista de navegación */}
-          <Box sx={styles.boxItemsNavigation}>
-            <List sx={styles.listItemsNavigation}>
-              {pages.map((page) => (
-                <ListItem key={page.name} sx={styles.listItem}>
-                  <NavLink
-                    to={page.url}
-                    style={({ isActive }) =>
-                      isActive ? styles.navlinkActive : styles.navlink
-                    }
-                  >
-                    <Typography variant="body1">{page.name}</Typography>
-                    {page.icon}
-                  </NavLink>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
+          {!state.isAuthenticated ? (
+            <>
+              <Box sx={styles.boxItemsNavigation}>
+                <List sx={styles.listItemsNavigation}>
+                  {pages.map((page) => (
+                    <ListItem key={page.name} sx={styles.listItem}>
+                      <NavLink
+                        to={page.url}
+                        style={({ isActive }) =>
+                          isActive ? styles.navlinkActive : styles.navlink
+                        }
+                      >
+                        <Typography variant="body1">{page.name}</Typography>
+                        {page.icon}
+                      </NavLink>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
 
-          {/* Menú hamburguesa para pantallas pequeñas */}
-          <IconButton
-            sx={{ mr: 2, display: { sm: "none" }, color: "white" }}
-            edge="start"
-          >
-            <MenuIcon />
-          </IconButton>
+              {/* Menú hamburguesa para pantallas pequeñas */}
+              <IconButton
+                sx={{ mr: 2, display: { sm: "none" }, color: "white" }}
+                edge="start"
+              >
+                <MenuIcon />
+              </IconButton>
+            </>
+          ) : (
+            <IconButton
+              onClick={handleLogout}
+              sx={{ color: "white" }}
+              edge="start"
+            >
+              <LogoutIcon />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

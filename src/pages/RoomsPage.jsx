@@ -92,7 +92,6 @@ const RoomsPage = () => {
     Math.max(0, indexOfFirstRoom),
     Math.min(filteredRooms.length, indexOfLastRoom)
   );
-  console.log(currentRooms);
 
   const paginate = (pageNumber) =>
     dispatch({ type: SET_CURRENT_PAGE, payload: pageNumber });

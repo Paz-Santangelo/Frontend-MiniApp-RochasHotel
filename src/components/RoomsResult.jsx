@@ -8,8 +8,11 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const RoomsResult = ({ roomSearchResults }) => {
+
+  const navigate = useNavigate();
 
   return (
     <Grid container spacing={3}>
@@ -50,6 +53,7 @@ const RoomsResult = ({ roomSearchResults }) => {
                 variant="contained"
                 color="primary"
                 sx={{ mr: 2, mb: 2 }}
+                onClick={() => navigate(`/detalles/${room.id}`)}
               >
                 Ver | Reservar
               </Button>
