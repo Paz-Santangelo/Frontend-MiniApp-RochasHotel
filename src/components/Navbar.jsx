@@ -62,7 +62,6 @@ const Navbar = () => {
     <Box>
       <AppBar component="nav" sx={styles.appBar}>
         <Toolbar>
-          {/* Logo del hotel */}
           <Box
             component="img"
             src={LogoHotel}
@@ -70,10 +69,8 @@ const Navbar = () => {
             alt="Logo del Hotel"
           />
 
-          {/* Espaciador */}
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Lista de navegación */}
           {/* {!state.isAuthenticated ? ( */}
             <>
               <Box sx={styles.boxItemsNavigation}>

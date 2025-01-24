@@ -54,7 +54,7 @@ const Footer = () => {
 
       <Box sx={styles.boxCopyright}>
         <Typography variant="body2">
-          © {new Date().getFullYear()} Nuestro Hotel. Todos los derechos
+          © {new Date().getFullYear()} Rochas Hotel. Todos los derechos
           reservados.
         </Typography>
       </Box>

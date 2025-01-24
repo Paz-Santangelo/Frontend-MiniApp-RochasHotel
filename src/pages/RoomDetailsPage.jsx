@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useReducer, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -9,47 +8,20 @@ import {
   Container,
   TextField,
 } from "@mui/material";
-import Slider from "react-slick";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { initialRoomState, roomReducer } from "../reducers/roomReducer";
 import { clearRoomDetails, fetchRoomDetails } from "../actions/RoomActions";
-import { getUserData, isAdmin, isAuthenticated, isUser } from "../actions/userActions";
+import {
+  getUserData,
+  isAdmin,
+  isAuthenticated,
+  isUser,
+} from "../actions/userActions";
 import { initialUserState, userReducer } from "../reducers/userReducer";
-
-function SampleNextArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: "block",
-        background: "#ccc",
-        borderRadius: "50%",
-      }}
-      onClick={onClick}
-    />
-  );
-}
-
-function SamplePrevArrow(props) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: "block",
-        background: "#ccc",
-        borderRadius: "50%",
-      }}
-      onClick={onClick}
-    />
-  );
-}
+import { Carousel } from "react-bootstrap";
 
 const RoomDetailsPage = () => {
   const [roomState, roomDispatch] = useReducer(roomReducer, initialRoomState);
@@ -59,22 +31,8 @@ const RoomDetailsPage = () => {
   const [children, setChildren] = useState(0);
   const { roomId } = useParams();
   const navigate = useNavigate();
-  
-  //console.log(userState.user.id);
 
-  const settings = {
-    dots: true,
-    fade: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 2000,
-    waitForAnimate: false,
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
-  };
+  //console.log(userState.user.id);
 
   useEffect(() => {
     isAuthenticated(userDispatch);
@@ -99,11 +57,10 @@ const RoomDetailsPage = () => {
 
   const handleButtonClick = () => {
     if (!userState.isAuthenticated) {
-      navigate("/login"); // Redirige al login si no está autenticado
+      navigate("/login");
       return;
     }
 
-    // Si está autenticado, verifica el rol
     if (userState.isAdmin) {
       navigate(`/editar/${roomId}`);
     } else {
@@ -115,16 +72,22 @@ const RoomDetailsPage = () => {
     <>
       <Box sx={styles.boxContainer}>
         <Container maxWidth="md" sx={styles.containerRoomDetails}>
-          <Box sx={styles.sliderContainer}>
-            <Slider {...settings}>
+          <Box sx={styles.carouselContainer}>
+            <Carousel fade>
               {selectedRoom.imagesRoom &&
                 selectedRoom.imagesRoom.length > 0 &&
                 selectedRoom.imagesRoom.map((image) => (
-                  <Box key={image.id} sx={styles.boxImageRoom}>
-                    <img src={image.urlImage} alt={selectedRoom.roomType} />
-                  </Box>
+                  <Carousel.Item key={image.id}>
+                    <Box key={image.id} sx={styles.boxImageRoom}>
+                      <img
+                        src={image.urlImage}
+                        alt={selectedRoom.roomType}
+                        style={{ borderRadius: "10px" }}
+                      />
+                    </Box>
+                  </Carousel.Item>
                 ))}
-            </Slider>
+            </Carousel>
           </Box>
           <Box sx={styles.detailsContainer}>
             <Typography variant="h4" sx={styles.title}>
@@ -147,8 +110,8 @@ const RoomDetailsPage = () => {
             </Button>
           </Box>
         </Container>
-        <Container sx={styles.containerBookingRoom}>
-          {showBooking && (
+        {showBooking && (
+          <Container sx={styles.containerBookingRoom}>
             <Box
               sx={{
                 display: "flex",
@@ -215,8 +178,8 @@ const RoomDetailsPage = () => {
                 </Button>
               </Box>
             </Box>
-          )}
-        </Container>
+          </Container>
+        )}
       </Box>
     </>
   );
@@ -236,7 +199,7 @@ const styles = {
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
     py: "2rem",
   },
-  sliderContainer: {
+  carouselContainer: {
     width: "100%",
     marginBottom: "2rem",
     overflow: "hidden",
@@ -245,17 +208,11 @@ const styles = {
     "& img": {
       display: "block",
       margin: "0 auto",
-      maxWidth: "80%",
-      maxHeight: "500px",
+      width: "70%",
       height: "auto",
-      minWidth: "300px", // Tamaño mínimo
-      minHeight: "200px", // Tamaño mínimo
-      objectFit: "contain", // Ajusta la imagen sin deformarla
-      borderRadius: "10px",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      objectFit: "contain",
       "@media (max-width: 600px)": {
-        maxHeight: "300px",
-        minHeight: "150px", // Ajusta el mínimo para pantallas pequeñas
+        width: "80%",
       },
     },
   },
@@ -302,7 +259,7 @@ const styles = {
     "@media (max-width: 600px)": {
       display: "flex",
       flexDirection: "column",
-      gap: 1,
+      gap: 2,
     },
   },
   boxInputsGuests: {
@@ -310,6 +267,10 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     gap: 2,
+    "@media (max-width: 600px)": {
+      display: "flex",
+      flexDirection: "column",
+    },
   },
   boxButtons: {
     display: "flex",

@@ -3,14 +3,12 @@ import { Box, Typography } from "@mui/material";
 const Hero = () => {
   return (
     <Box sx={styles.boxContainerHero}>
-      {/* Video de fondo */}
       <Box
-        sx={styles.heroVideo}
+        sx={styles.heroImage}
       >
         <img src="https://www.cadena3.com/admin/playerswf/fotos/ARCHI_8548831200x771.jpg" alt="Vista panorámica del hotel" />
       </Box>
 
-      {/* Contenido superpuesto */}
       <Box sx={styles.heroContentContainer}>
         <Typography variant="h1" sx={styles.typogaphyTitle}>
           ¡Bienvenidos!
@@ -35,7 +33,7 @@ const styles = {
     width: "100%",
     overflow: "hidden",
   },
-  heroVideo: {
+  heroImage: {
     position: "absolute",
     top: 0,
     left: 0,
