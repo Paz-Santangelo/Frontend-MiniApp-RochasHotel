@@ -9,15 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 import RoomSearch from "../components/RoomSearch";
-import ApiService from "../services/ApiService";
 import { roomReducer, initialRoomState } from "../reducers/roomReducer";
 import {
   FETCH_ROOMS,
-  FETCH_ROOM_TYPES,
-  SET_SELECTED_ROOM_TYPE,
-  FILTER_ROOMS,
-  SET_CURRENT_PAGE,
-} from "../actions/RoomActions";
+  fetchRoomsAction,
+  fetchRoomTypesAction,
+  changeRoomTypeAction,
+  changePageAction,
+} from "../actions/roomActions";
 import NotificationAlert from "../components/NotificationAlert";
 import RoomsResult from "../components/RoomsResult";
 import CustomPagination from "../components/CustomPagination";
@@ -31,7 +30,6 @@ const RoomsPage = () => {
   });
 
   const {
-    rooms,
     filteredRooms,
     roomTypes,
     selectedRoomType,
@@ -49,31 +47,11 @@ const RoomsPage = () => {
 
   useEffect(() => {
     const fetchRooms = async () => {
-      try {
-        const allRooms = await ApiService.getAllRooms();
-        dispatch({ type: FETCH_ROOMS, payload: allRooms });
-      } catch (error) {
-        console.error(
-          "Error al obtener todas las habitaciones:",
-          error.message
-        );
-        showAlert(
-          "Error al obtener todas las habitaciones, inténtelo nuevamente más tarde: ",
-          "error"
-        );
-      }
+      await fetchRoomsAction()(dispatch);
     };
 
     const fetchRoomTypes = async () => {
-      try {
-        const types = await ApiService.getRoomTypes();
-        dispatch({ type: FETCH_ROOM_TYPES, payload: types });
-      } catch (error) {
-        console.error(
-          "Error al traer los tipos de habitaciones, intentelo mas tarde:",
-          error.message
-        );
-      }
+      await fetchRoomTypesAction()(dispatch);
     };
 
     fetchRooms();
@@ -82,8 +60,7 @@ const RoomsPage = () => {
 
   const handleRoomTypeChange = (e) => {
     const type = e.target.value;
-    dispatch({ type: SET_SELECTED_ROOM_TYPE, payload: type });
-    dispatch({ type: FILTER_ROOMS, payload: type });
+    changeRoomTypeAction(type)(dispatch);
   };
 
   const indexOfLastRoom = currentPage * roomsPerPage;
@@ -94,7 +71,7 @@ const RoomsPage = () => {
   );
 
   const paginate = (pageNumber) =>
-    dispatch({ type: SET_CURRENT_PAGE, payload: pageNumber });
+    changePageAction(pageNumber)(dispatch);
 
   return (
     <Box sx={styles.boxContainerRoomsPage}>

@@ -15,25 +15,17 @@ export const login = async (dispatch, loginDetails) => {
   try {
     const response = await ApiService.loginUser(loginDetails);
     //console.log(response);
-    // Validar y guardar token y rol
     if (response.data.token && response.data.role) {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
     } else {
-      throw new Error("Datos incompletos del servidor");
+      throw new Error("Datos incompletos del servidor.");
     }
-    // Despachar acción de éxito
+
     dispatch({ type: USER_LOGIN_SUCCESS, payload: response });
   } catch (error) {
-    const status = error.response?.status;
-    const message =
-      status === 401
-        ? "Credenciales incorrectas. Por favor, verifica tu correo o contraseña."
-        : status === 403
-        ? "Acceso denegado"
-        : error.response?.data?.message || "Error de conexión";
+    const message = error.response?.data || "Error de conexión con el servidor.";
 
-    // Despachar acción de error
     dispatch({ type: USER_LOGIN_FAILURE, payload: message });
   }
 };

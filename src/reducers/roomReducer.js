@@ -6,11 +6,13 @@ import {
   SET_CURRENT_PAGE,
   FETCH_ROOM_DETAILS,
   CLEAR_ROOM_DETAILS,
-} from "../actions/RoomActions";
+  FETCH_ROOMS_FAILURE,
+} from "../actions/roomActions";
 
 const initialState = {
   rooms: [],
   filteredRooms: [],
+  error: null,
   roomTypes: [],
   selectedRoomType: "all",
   currentPage: 1,
@@ -21,6 +23,7 @@ const initialState = {
 export const roomReducer = (state, action) => {
   switch (action.type) {
     case FETCH_ROOMS:
+      //console.log("Datos recibidos para FETCH_ROOMS:", action.payload);
       return {
         ...state,
         rooms: action.payload,
@@ -59,6 +62,11 @@ export const roomReducer = (state, action) => {
       return {
         ...state,
         roomDetails: null,
+      };
+    case FETCH_ROOMS_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
       };
     default:
       return state;

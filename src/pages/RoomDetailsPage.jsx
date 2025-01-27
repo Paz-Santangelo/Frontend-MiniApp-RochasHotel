@@ -13,7 +13,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { initialRoomState, roomReducer } from "../reducers/roomReducer";
-import { clearRoomDetails, fetchRoomDetails } from "../actions/RoomActions";
 import {
   getUserData,
   isAdmin,
@@ -22,17 +21,36 @@ import {
 } from "../actions/userActions";
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import { Carousel } from "react-bootstrap";
+import { clearRoomDetails, fetchRoomDetails } from "../actions/RoomActions";
+import { bookingReducer } from "../reducers/bookingReducer";
+import NotificationAlert from "../components/NotificationAlert";
+import { bookRoom } from "../actions/bookingActions";
+import MessageDialog from "../components/MessageDialog";
 
 const RoomDetailsPage = () => {
-  const [roomState, roomDispatch] = useReducer(roomReducer, initialRoomState);
-  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
-  const [showBooking, setShowBooking] = useState(false);
-  const [adults, setAdults] = useState(1);
-  const [children, setChildren] = useState(0);
   const { roomId } = useParams();
   const navigate = useNavigate();
+  const [roomState, roomDispatch] = useReducer(roomReducer, initialRoomState);
+  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
+  const [bookingState, bookingDispatch] = useReducer(bookingReducer, {
+    loading: false,
+    success: false,
+    error: null,
+    bookingDetails: null,
+  });
 
   //console.log(userState.user.id);
+  //console.log(roomState.selectedRoom);
+
+  const [showBooking, setShowBooking] = useState(false);
+  const [checkInDate, setCheckInDate] = useState(null);
+  const [checkOutDate, setCheckOutDate] = useState(null);
+  const [adultsQuantity, setAdultsQuantity] = useState(1);
+  const [childrenQuantity, setChildrenQuantity] = useState(0);
+  const [totalGuests, setTotalGuests] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     isAuthenticated(userDispatch);
@@ -66,6 +84,72 @@ const RoomDetailsPage = () => {
     } else {
       setShowBooking(true);
     }
+  };
+
+  const handleCloseAlert = () => {
+    setAlertOpen(false);
+  };
+
+  const handleOpenDialog = () => {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+    const totalDays = Math.round(Math.abs((startDate - endDate) / oneDay)) + 1;
+
+    const totalGuests = adultsQuantity + childrenQuantity;
+
+    const roomPricePerNight = selectedRoom.roomPrice;
+    const totalPrice = totalDays * roomPricePerNight;
+
+    setTotalPrice(totalPrice);
+    setTotalGuests(totalGuests);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleBookingSubmit = () => {
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+
+    //console.log("Fecha de entrada original: ", startDate);
+    //console.log("Fecha de salida original: ", endDate);
+
+    const formattedCheckInDate = new Date(
+      startDate.getTime() - startDate.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .split("T")[0];
+
+    const formattedCheckOutDate = new Date(
+      endDate.getTime() - endDate.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .split("T")[0];
+
+    //console.log("Fecha de entrada formateada: ", startDate);
+    //console.log("Fecha de salida formateada: ", endDate);
+
+    const bookingData = {
+      checkInDate: formattedCheckInDate,
+      checkOutDate: formattedCheckOutDate,
+      adultsQuantity: adultsQuantity,
+      childrenQuantity: childrenQuantity,
+    };
+
+    //console.log("ID de la habitación: ", roomId);
+    //console.log("ID del usuario: ", userState.user.id);
+    //console.log("Datos de la reserva: ", bookingData);
+
+    bookRoom(roomId, userState.user.id, bookingData)(bookingDispatch);
+    setAlertOpen(true);
+  };
+
+  const handleConfirmDialogBooking = () => {
+    handleBookingSubmit();
+    setOpenDialog(false);
   };
 
   return (
@@ -126,14 +210,18 @@ const RoomDetailsPage = () => {
                 <Box sx={styles.boxInputsDatePicker}>
                   <DatePicker
                     label="Check-In"
+                    value={checkInDate}
                     format="DD/MM/YYYY"
                     defaultValue={dayjs(new Date())}
+                    onChange={(date) => setCheckInDate(date)}
                     slotProps={{ textField: { variant: "outlined" } }}
                   />
                   <DatePicker
                     label="Check-Out"
+                    value={checkOutDate}
                     format="DD/MM/YYYY"
                     defaultValue={dayjs(new Date())}
+                    onChange={(date) => setCheckOutDate(date)}
                     slotProps={{ textField: { variant: "outlined" } }}
                   />
                 </Box>
@@ -143,8 +231,8 @@ const RoomDetailsPage = () => {
                   label="Adultos"
                   type="number"
                   variant="outlined"
-                  value={adults}
-                  onChange={(e) => setAdults(Number(e.target.value))}
+                  value={adultsQuantity}
+                  onChange={(e) => setAdultsQuantity(parseInt(e.target.value))}
                   input={{ min: 1 }}
                   sx={styles.guestInput}
                 />
@@ -152,8 +240,10 @@ const RoomDetailsPage = () => {
                   label="Niños"
                   type="number"
                   variant="outlined"
-                  value={children}
-                  onChange={(e) => setChildren(Number(e.target.value))}
+                  value={childrenQuantity}
+                  onChange={(e) =>
+                    setChildrenQuantity(parseInt(e.target.value))
+                  }
                   input={{ min: 0 }}
                   sx={styles.guestInput}
                 />
@@ -164,8 +254,9 @@ const RoomDetailsPage = () => {
                   variant="contained"
                   color="success"
                   sx={styles.button}
+                  onClick={handleOpenDialog}
                 >
-                  Guardar Reserva
+                  Reservar
                 </Button>
                 <Button
                   size="large"
@@ -180,7 +271,28 @@ const RoomDetailsPage = () => {
             </Box>
           </Container>
         )}
+        {totalPrice > 0 && (
+          <MessageDialog
+            open={openDialog}
+            handleClose={handleCloseDialog}
+            totalPrice={totalPrice}
+            totalGuests={totalGuests}
+            onConfirmBooking={handleConfirmDialogBooking}
+          />
+        )}
       </Box>
+
+      {/* Mostrar notificación */}
+      <NotificationAlert
+        open={alertOpen}
+        onClose={handleCloseAlert}
+        severity={bookingState.error ? "error" : "success"}
+        message={
+          bookingState.error
+            ? bookingState.error
+            : "Reserva realizada con éxito"
+        }
+      />
     </>
   );
 };

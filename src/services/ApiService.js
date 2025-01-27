@@ -83,7 +83,7 @@ export default class ApiService {
   static isAuthenticated() {
     const token = localStorage.getItem("token");
     //console.log(!!token);
-    
+
     return !!token;
   }
 
@@ -111,7 +111,7 @@ export default class ApiService {
   static async getAllRooms() {
     const result = await axios.get(`${this.BASE_URL}/rooms/all`);
     //console.log(result);
-    return result.data;
+    return result;
   }
   static async getRoomTypes() {
     const response = await axios.get(`${this.BASE_URL}/rooms/types`);
@@ -170,7 +170,7 @@ export default class ApiService {
 
   /* BOOKING */
   static async bookRoom(roomId, userId, booking) {
-    console.log("USER ID IS: " + userId);
+    //console.log("USER ID IS: " + userId);
 
     const response = await axios.post(
       `${this.BASE_URL}/bookings/create/${roomId}/${userId}`,
