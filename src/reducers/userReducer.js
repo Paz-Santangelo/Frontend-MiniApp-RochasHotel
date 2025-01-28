@@ -7,6 +7,9 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
+  USER_REGISTER_REQUEST,
+  USER_REGISTER_SUCCESS,
+  USER_REGISTER_FAILURE,
 } from "../actions/userActions";
 
 const initialState = {
@@ -16,6 +19,7 @@ const initialState = {
   isAuthenticated: false,
   isAdmin: false,
   isUser: false,
+  registrationSuccess: false,
 };
 
 export const userReducer = (state, action) => {
@@ -47,7 +51,28 @@ export const userReducer = (state, action) => {
       return { ...state, isUser: action.payload };
     case USER_DATA:
       return { ...state, user: action.payload };
-      default:
+    case USER_REGISTER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        registrationSuccess: false,
+      };
+    case USER_REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        registrationSuccess: true,
+      };
+    case USER_REGISTER_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        registrationSuccess: false,
+      };
+    default:
       return state;
   }
 };

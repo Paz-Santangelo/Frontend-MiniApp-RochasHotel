@@ -83,6 +83,8 @@ const RoomSearch = ({ handleSearchResult, showAlert }) => {
     }
   };
 
+  const isButtonDisabled = !startDate || !endDate || !roomType;
+
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -127,11 +129,10 @@ const RoomSearch = ({ handleSearchResult, showAlert }) => {
         variant="contained"
         color="primary"
         onClick={handleInternalSearch}
-        disabled={isLoading}
+        disabled={isLoading || isButtonDisabled}
       >
         {isLoading ? "Buscando..." : "Buscar"}
       </Button>
-      
     </>
   );
 };

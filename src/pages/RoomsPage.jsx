@@ -103,7 +103,6 @@ const RoomsPage = () => {
         <RoomSearch
           handleSearchResult={(results) => {
             dispatch({ type: FETCH_ROOMS, payload: results });
-            showAlert("Búsqueda completada con éxito", "success");
           }}
           showAlert={showAlert}
         />

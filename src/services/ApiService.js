@@ -17,7 +17,7 @@ export default class ApiService {
       `${this.BASE_URL}/auth/register`,
       registration
     );
-    return response.data;
+    return response;
   }
 
   static async loginUser(loginDetails) {
