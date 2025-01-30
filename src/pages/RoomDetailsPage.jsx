@@ -21,7 +21,7 @@ import {
 } from "../actions/userActions";
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import { Carousel } from "react-bootstrap";
-import { clearRoomDetails, fetchRoomDetails } from "../actions/RoomActions";
+import { clearRoomDetails, fetchRoomDetails } from "../actions/roomActions";
 import { bookingReducer } from "../reducers/bookingReducer";
 import NotificationAlert from "../components/NotificationAlert";
 import { bookRoom } from "../actions/bookingActions";
@@ -80,7 +80,7 @@ const RoomDetailsPage = () => {
     }
 
     if (userState.isAdmin) {
-      navigate(`/editar/${roomId}`);
+      navigate(`/admin/editar/${roomId}`);
     } else {
       setShowBooking(true);
     }
@@ -191,6 +191,15 @@ const RoomDetailsPage = () => {
               onClick={handleButtonClick}
             >
               {userState.isAdmin ? "Editar" : "Reservar"}
+            </Button>
+            <Button
+              size="large"
+              variant="contained"
+              color="error"
+              sx={styles.button}
+              /* onClick={handleButtonClick} */
+            >
+              {userState.isAdmin ? "Eliminar" : "Cancelar"}
             </Button>
           </Box>
         </Container>
@@ -347,6 +356,7 @@ const styles = {
   button: {
     padding: "0.8rem 2rem",
     borderRadius: "8px",
+    mx: "1rem",
   },
   loadingContainer: {
     display: "flex",

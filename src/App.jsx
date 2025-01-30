@@ -3,7 +3,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
@@ -15,8 +15,9 @@ import LoginPage from "./pages/LoginPage";
 import Footer from "./components/Footer";
 import RoomsPage from "./pages/RoomsPage";
 import RoomDetailsPage from "./pages/RoomDetailsPage";
-import { ProtectedRoute } from "./services/guard";
+import { AdminRoute, ProtectedRoute } from "./services/guard";
 import DashboardPage from "./pages/DashboardPage";
+import EditRoomPage from "./pages/EditRoomPage";
 
 function App() {
   return (
@@ -31,11 +32,17 @@ function App() {
           <Route path="/registrate" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/detalles/:roomId" element={<RoomDetailsPage />} />
-          
+
           {/* Rutas Protegidas */}
           <Route
             path="/dashboard"
             element={<ProtectedRoute element={<DashboardPage />} />}
+          />
+
+          {/* Rutas de Administrador */}
+          <Route
+            path="/admin/editar/:roomId"
+            element={<AdminRoute element={<EditRoomPage />} />}
           />
         </Routes>
         <Footer />

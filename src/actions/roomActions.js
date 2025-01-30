@@ -8,6 +8,9 @@ export const FILTER_ROOMS = "FILTER_ROOMS";
 export const SET_CURRENT_PAGE = "SET_CURRENT_PAGE";
 export const FETCH_ROOM_DETAILS = "FETCH_ROOM_DETAILS";
 export const CLEAR_ROOM_DETAILS = "CLEAR_ROOM_DETAILS";
+export const UPDATE_ROOM = "UPDATE_ROOM";
+export const UPDATE_ROOM_SUCCESS = "UPDATE_ROOM_SUCCESS";
+export const UPDATE_ROOM_FAILURE = "UPDATE_ROOM_FAILURE";
 
 export const fetchRoomsAction = () => async (dispatch) => {
   try {
@@ -87,3 +90,18 @@ export const fetchAvailableRoomsByDateAndType =
 export const clearRoomDetails = () => ({
   type: CLEAR_ROOM_DETAILS,
 });
+
+export const updateRoomAction = (roomId, formData) => async (dispatch) => {
+  dispatch({ type: UPDATE_ROOM });
+
+  try {
+    const result = await ApiService.updateRoom(roomId, formData);
+    //console.log("Room updated:", result.data);
+    
+    dispatch({ type: UPDATE_ROOM_SUCCESS, payload: result.data });
+  } catch (error) {
+    const message = error.response?.data?.error || error.response?.data || "Error de conexión con el servidor.";
+    console.error(message);
+    dispatch({ type: UPDATE_ROOM_FAILURE, payload: message });
+  }
+}

@@ -7,6 +7,9 @@ import {
   FETCH_ROOM_DETAILS,
   CLEAR_ROOM_DETAILS,
   FETCH_ROOMS_FAILURE,
+  UPDATE_ROOM,
+  UPDATE_ROOM_SUCCESS,
+  UPDATE_ROOM_FAILURE,
 } from "../actions/roomActions";
 
 const initialState = {
@@ -18,6 +21,8 @@ const initialState = {
   currentPage: 1,
   roomsPerPage: 6,
   selectedRoom: null,
+  isUpdating: false,
+  updateError: null,
 };
 
 export const roomReducer = (state, action) => {
@@ -67,6 +72,30 @@ export const roomReducer = (state, action) => {
       return {
         ...state,
         error: action.payload,
+      };
+    case UPDATE_ROOM:
+      return {
+        ...state,
+        isUpdating: true,
+        updateError: null,
+      };
+    case UPDATE_ROOM_SUCCESS:
+      return {
+        ...state,
+        isUpdating: false,
+        rooms: state.rooms.map((room) =>
+          room.id === action.payload.id ? action.payload : room
+        ),
+        filteredRooms: state.filteredRooms.map((room) =>
+          room.id === action.payload.id ? action.payload : room
+        ),
+        selectedRoom: action.payload,
+      };
+    case UPDATE_ROOM_FAILURE:
+      return {
+        ...state,
+        isUpdating: false,
+        updateError: action.payload,
       };
     default:
       return state;
