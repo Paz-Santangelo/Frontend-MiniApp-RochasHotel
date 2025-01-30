@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { initialRoomState, roomReducer } from "../reducers/roomReducer";
 import { fetchRoomDetails, updateRoomAction } from "../actions/roomActions"; // Importamos la acción updateRoomAction
 import DeleteIcon from "@mui/icons-material/Delete";
+import NotificationAlert from "../components/NotificationAlert";
 
 const EditRoomPage = () => {
   const { roomId } = useParams();
@@ -17,9 +18,12 @@ const EditRoomPage = () => {
     roomDescription: "",
     roomPrice: "",
   });
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [imagesToDelete, setImagesToDelete] = useState([]);
 
   // Extraemos el estado de actualización y errores
   const { selectedRoom, isUpdating, updateError } = roomState;
+
   //console.log(selectedRoom.imagesRoom[2].name);
 
   // Cargar los detalles de la habitación al montar el componente
@@ -56,6 +60,19 @@ const EditRoomPage = () => {
     }));
   };
 
+  const handleRemoveExistingImage = (index) => {
+    const updatedImages = [...roomData.existingImages];
+    const removedImage = updatedImages.splice(index, 1)[0];
+    setRoomData({ ...roomData, existingImages: updatedImages });
+    setImagesToDelete([...imagesToDelete, removedImage]);
+  };
+
+  const handleRemoveNewImage = (index) => {
+    const updatedFiles = [...roomData.files];
+    updatedFiles.splice(index, 1);
+    setRoomData({ ...roomData, files: updatedFiles });
+  };
+
   // Convertir una URL de imagen en un archivo File
   const urlToFile = async (url, index) => {
     const response = await fetch(url);
@@ -88,10 +105,19 @@ const EditRoomPage = () => {
       formData.append("files", file);
     });
 
-    console.log("Enviando datos:", formData.entries());
+    imagesToDelete.forEach((image) => {
+      formData.append("imagesToDelete", image);
+    });
 
-    // Llamar a la acción updateRoomAction
+    //console.log("Enviando datos:", formData.entries());
+
     updateRoomAction(roomId, formData)(roomDispatch);
+
+    setAlertOpen(true);
+  };
+
+  const handleCloseAlert = () => {
+    setAlertOpen(false);
   };
 
   return (
@@ -153,6 +179,12 @@ const EditRoomPage = () => {
                 height={100}
                 style={{ objectFit: "cover", borderRadius: 8 }}
               />
+              <IconButton
+                sx={styles.iconButton}
+                onClick={() => handleRemoveExistingImage(index)}
+              >
+                <DeleteIcon fontSize="small" color="black" />
+              </IconButton>
             </Box>
           ))}
 
@@ -166,12 +198,16 @@ const EditRoomPage = () => {
                 height={100}
                 style={{ objectFit: "cover", borderRadius: 8 }}
               />
+              <IconButton
+                sx={styles.iconButton}
+                onClick={() => handleRemoveNewImage(index)}
+              >
+                <DeleteIcon fontSize="small" color="black" />
+              </IconButton>
             </Box>
           ))}
         </Box>
-        <Box
-          sx={styles.boxButtons}
-        >
+        <Box sx={styles.boxButtons}>
           <Button
             type="submit"
             variant="contained"
@@ -191,6 +227,17 @@ const EditRoomPage = () => {
           </Button>
         </Box>
       </form>
+
+      <NotificationAlert
+        open={alertOpen}
+        onClose={handleCloseAlert}
+        severity={roomState.updateError ? "error" : "success"}
+        message={
+          roomState.updateError
+            ? roomState.updateError
+            : "La habitación fue actualizada con éxito."
+        }
+      />
     </Box>
   );
 };
@@ -217,6 +264,16 @@ const styles = {
     justifyContent: "flex-end",
     gap: 3,
     mt: 3,
+  },
+  iconButton: {
+    position: "absolute",
+    top: 2,
+    right: 2,
+    backgroundColor: "rgba(255, 255, 255, 0.57)",
+    "&:hover": { backgroundColor: "rgba(250, 250, 250, 0.97)" },
+    padding: "4px",
+    minWidth: "28px",
+    minHeight: "28px",
   },
 };
 

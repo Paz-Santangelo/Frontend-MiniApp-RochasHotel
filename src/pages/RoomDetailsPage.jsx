@@ -40,17 +40,24 @@ const RoomDetailsPage = () => {
   });
 
   //console.log(userState.user.id);
-  //console.log(roomState.selectedRoom);
+  //console.log(userState.isAdmin);
 
   const [showBooking, setShowBooking] = useState(false);
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [adultsQuantity, setAdultsQuantity] = useState(1);
   const [childrenQuantity, setChildrenQuantity] = useState(0);
-  const [totalGuests, setTotalGuests] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [alertOpen, setAlertOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [contentMessageDialog, setContentMessageDialog] = useState({
+    roomType: "",
+    checkInDate: null,
+    checkOutDate: null,
+    totalGuests: "",
+    totalPrice: "",
+  });
+
+  //console.log(contentMessageDialog);
 
   useEffect(() => {
     isAuthenticated(userDispatch);
@@ -61,7 +68,7 @@ const RoomDetailsPage = () => {
     return () => {
       roomDispatch(clearRoomDetails());
     };
-  }, [roomId, userState.isAuthenticated, navigate]);
+  }, [roomId, navigate]);
 
   const { selectedRoom } = roomState;
 
@@ -73,36 +80,28 @@ const RoomDetailsPage = () => {
     );
   }
 
-  const handleButtonClick = () => {
-    if (!userState.isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-
-    if (userState.isAdmin) {
-      navigate(`/admin/editar/${roomId}`);
-    } else {
-      setShowBooking(true);
-    }
-  };
-
   const handleCloseAlert = () => {
     setAlertOpen(false);
   };
 
   const handleOpenDialog = () => {
     const oneDay = 24 * 60 * 60 * 1000;
-    const startDate = new Date(checkInDate);
-    const endDate = new Date(checkOutDate);
+    const startDate = checkInDate ? new Date(checkInDate) : new Date();
+    const endDate = checkOutDate ? new Date(checkOutDate) : new Date();
     const totalDays = Math.round(Math.abs((startDate - endDate) / oneDay)) + 1;
-
     const totalGuests = adultsQuantity + childrenQuantity;
-
     const roomPricePerNight = selectedRoom.roomPrice;
     const totalPrice = totalDays * roomPricePerNight;
+    //console.log("Precio total: ", totalPrice);
 
-    setTotalPrice(totalPrice);
-    setTotalGuests(totalGuests);
+    setContentMessageDialog({
+      roomType: selectedRoom.roomType,
+      checkInDate: startDate,
+      checkOutDate: endDate,
+      totalGuests: totalGuests,
+      totalPrice: totalPrice,
+    });
+
     setOpenDialog(true);
   };
 
@@ -147,8 +146,46 @@ const RoomDetailsPage = () => {
     setAlertOpen(true);
   };
 
-  const handleConfirmDialogBooking = () => {
+  const handleConfirmDialog = () => {
     handleBookingSubmit();
+    setOpenDialog(false);
+  };
+
+  const handleButtonClick = () => {
+    if (!userState.isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    if (userState.isAdmin) {
+      navigate(`/admin/editar/${roomId}`);
+    } else {
+      setShowBooking(true);
+    }
+  };
+
+  const handleButtonCancel = () => {
+    if (!userState.isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    if (userState.isAdmin) {
+      setContentMessageDialog({
+        roomType: selectedRoom.roomType,
+        checkInDate: null,
+        checkOutDate: null,
+        totalGuests: "N/A",
+        totalPrice: "N/A",
+      });
+      setOpenDialog(true);
+    } else {
+      navigate("/habitaciones");
+    }
+  };
+
+  const handleDeleteRoom = () => {
+    console.log("Eliminar habitación:", roomId);
     setOpenDialog(false);
   };
 
@@ -197,7 +234,7 @@ const RoomDetailsPage = () => {
               variant="contained"
               color="error"
               sx={styles.button}
-              /* onClick={handleButtonClick} */
+              onClick={handleButtonCancel}
             >
               {userState.isAdmin ? "Eliminar" : "Cancelar"}
             </Button>
@@ -219,7 +256,7 @@ const RoomDetailsPage = () => {
                 <Box sx={styles.boxInputsDatePicker}>
                   <DatePicker
                     label="Check-In"
-                    value={checkInDate}
+                    value={checkInDate || dayjs()}
                     format="DD/MM/YYYY"
                     defaultValue={dayjs(new Date())}
                     onChange={(date) => setCheckInDate(date)}
@@ -280,15 +317,69 @@ const RoomDetailsPage = () => {
             </Box>
           </Container>
         )}
-        {totalPrice > 0 && (
-          <MessageDialog
-            open={openDialog}
-            handleClose={handleCloseDialog}
-            totalPrice={totalPrice}
-            totalGuests={totalGuests}
-            onConfirmBooking={handleConfirmDialogBooking}
-          />
-        )}
+        <MessageDialog
+          open={openDialog}
+          handleClose={handleCloseDialog}
+          onConfirmBooking={
+            userState.isAdmin ? handleDeleteRoom : handleConfirmDialog
+          }
+          type={userState.isAdmin ? "warning" : "info"}
+        >
+          {{
+            title: userState.isAdmin
+              ? "¿Estás seguro/a de eliminar esta habitación?"
+              : "Resumen de la reserva",
+            body: userState.isAdmin ? (
+              <Box>
+                <Typography>🏨 {selectedRoom.roomType}</Typography>
+                <Typography>📄 {selectedRoom.roomDescription}</Typography>
+                <Typography>💰 Precio: ${selectedRoom.roomPrice}</Typography>
+              </Box>
+            ) : (
+              <Box>
+                <Typography variant="h6" fontWeight="bold">
+                  Detalles:
+                </Typography>
+                <Typography>🛏️ Tipo: {selectedRoom.roomType}</Typography>
+
+                {contentMessageDialog.checkInDate &&
+                  contentMessageDialog.checkOutDate && (
+                    <>
+                      <Typography>
+                        📅 Entrada:{" "}
+                        {contentMessageDialog.checkInDate.toLocaleDateString(
+                          "es-ES",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      </Typography>
+                      <Typography>
+                        📅 Salida:{" "}
+                        {contentMessageDialog.checkOutDate.toLocaleDateString(
+                          "es-ES",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      </Typography>
+                    </>
+                  )}
+
+                <Typography>
+                  👥 Invitados: {contentMessageDialog.totalGuests}
+                </Typography>
+                <Typography>
+                  💰 Total: <strong>${contentMessageDialog.totalPrice}</strong>
+                </Typography>
+              </Box>
+            ),
+          }}
+        </MessageDialog>
       </Box>
 
       {/* Mostrar notificación */}
