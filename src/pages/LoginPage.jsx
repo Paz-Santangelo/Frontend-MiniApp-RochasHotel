@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
+  //console.log(state);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);

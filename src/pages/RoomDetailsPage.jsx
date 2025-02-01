@@ -21,7 +21,11 @@ import {
 } from "../actions/userActions";
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import { Carousel } from "react-bootstrap";
-import { clearRoomDetails, fetchRoomDetails } from "../actions/roomActions";
+import {
+  clearRoomDetails,
+  deleteRoomAction,
+  fetchRoomDetails,
+} from "../actions/roomActions";
 import { bookingReducer } from "../reducers/bookingReducer";
 import NotificationAlert from "../components/NotificationAlert";
 import { bookRoom } from "../actions/bookingActions";
@@ -32,16 +36,14 @@ const RoomDetailsPage = () => {
   const navigate = useNavigate();
   const [roomState, roomDispatch] = useReducer(roomReducer, initialRoomState);
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
+  //console.log(userState);
+  
   const [bookingState, bookingDispatch] = useReducer(bookingReducer, {
     loading: false,
     success: false,
     error: null,
     bookingDetails: null,
   });
-
-  //console.log(userState.user.id);
-  //console.log(userState.isAdmin);
-
   const [showBooking, setShowBooking] = useState(false);
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
@@ -56,8 +58,6 @@ const RoomDetailsPage = () => {
     totalGuests: "",
     totalPrice: "",
   });
-
-  //console.log(contentMessageDialog);
 
   useEffect(() => {
     isAuthenticated(userDispatch);
@@ -184,9 +184,11 @@ const RoomDetailsPage = () => {
     }
   };
 
-  const handleDeleteRoom = () => {
+  const handleDeleteRoom = async () => {
     console.log("Eliminar habitación:", roomId);
+    await deleteRoomAction(roomId)(roomDispatch);
     setOpenDialog(false);
+    setAlertOpen(true);
   };
 
   return (
@@ -302,7 +304,7 @@ const RoomDetailsPage = () => {
                   sx={styles.button}
                   onClick={handleOpenDialog}
                 >
-                  Reservar
+                  Confirmar
                 </Button>
                 <Button
                   size="large"
@@ -386,11 +388,11 @@ const RoomDetailsPage = () => {
       <NotificationAlert
         open={alertOpen}
         onClose={handleCloseAlert}
-        severity={bookingState.error ? "error" : "success"}
+        severity={bookingState.error || roomState.error ? "error" : "success"}
         message={
-          bookingState.error
-            ? bookingState.error
-            : "Reserva realizada con éxito"
+          userState.isAdmin
+            ? roomState.error || roomState.successMessage || "Habitación eliminada con éxito."
+            : bookingState.error || "Reserva realizada con éxito."
         }
       />
     </>

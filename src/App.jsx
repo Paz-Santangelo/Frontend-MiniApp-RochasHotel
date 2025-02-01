@@ -6,49 +6,45 @@ import "@fontsource/roboto/700.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Navbar from "./components/Navbar";
-import HomePage from "./pages/HomePage";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AboutUs from "./pages/AboutUs";
-import ContactUs from "./pages/ContactUs";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
-import Footer from "./components/Footer";
-import RoomsPage from "./pages/RoomsPage";
-import RoomDetailsPage from "./pages/RoomDetailsPage";
-import { AdminRoute, ProtectedRoute } from "./services/guard";
-import DashboardPage from "./pages/DashboardPage";
-import EditRoomPage from "./pages/EditRoomPage";
+import { BrowserRouter } from "react-router-dom";
+import { Box, CssBaseline } from "@mui/material";
+import Sidenav from "./components/Sidenav";
+import React from "react";
+import AppRoutes from "./router/AppRoutes";
+import { ProSidebarProvider } from "react-pro-sidebar";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/nosotros" element={<AboutUs />} />
-          <Route path="/contacto" element={<ContactUs />} />
-          <Route path="/habitaciones" element={<RoomsPage />} />
-          <Route path="/registrate" element={<RegisterPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/detalles/:roomId" element={<RoomDetailsPage />} />
-
-          {/* Rutas Protegidas */}
-          <Route
-            path="/dashboard"
-            element={<ProtectedRoute element={<DashboardPage />} />}
-          />
-
-          {/* Rutas de Administrador */}
-          <Route
-            path="/admin/editar/:roomId"
-            element={<AdminRoute element={<EditRoomPage />} />}
-          />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </>
+    <React.Fragment>
+      <ProSidebarProvider>
+        <CssBaseline />
+        <BrowserRouter>
+          <Navbar />
+          <Box sx={styles.container}>
+            <Sidenav />
+            <Box component={"main"} sx={styles.mainSection}>
+              <AppRoutes />
+            </Box>
+          </Box>
+        </BrowserRouter>
+      </ProSidebarProvider>
+    </React.Fragment>
   );
 }
+
+/** @type {import("@mui/material").SxProps}  */
+const styles = {
+  container: {
+    display: "flex",
+    bgcolor: "neutral.light",
+    height:
+      "calc(100% - 64px)" 
+  },
+  mainSection: {
+    width: "100%",
+    height: "100%",
+    overflow: "auto",
+  },
+};
 
 export default App;

@@ -16,6 +16,7 @@ import { useEffect, useReducer } from "react";
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import { isAuthenticated, logout } from "../actions/userActions";
 import ApiService from "../services/ApiService";
+import { useProSidebar } from "react-pro-sidebar";
 
 /* cuando el usuario está logueando se deben ocultar los links y que esté únicamente el botón de cerrar sesión */
 
@@ -46,6 +47,7 @@ const pages = [
 const Navbar = () => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
   const navigate = useNavigate();
+  const { collapseSidebar, toggleSidebar, broken } = useProSidebar();
 
   const token = ApiService.isAuthenticated();
 
@@ -61,6 +63,14 @@ const Navbar = () => {
     <Box>
       <AppBar component="nav" sx={styles.appBar}>
         <Toolbar>
+          {state.isAuthenticated && (
+            <IconButton
+              onClick={() => (broken ? toggleSidebar() : collapseSidebar())}
+              color="secondary"
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Box
             component="img"
             src={LogoHotel}

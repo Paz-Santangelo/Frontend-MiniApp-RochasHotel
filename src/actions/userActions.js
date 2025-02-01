@@ -40,9 +40,8 @@ export const logout = (dispatch) => {
 };
 
 export const isAuthenticated = (dispatch) => {
-  const token = localStorage.getItem("token");
-  const authenticated = Boolean(token);
-  dispatch({ type: USER_IS_AUTHENTICATED, payload: authenticated });
+  const token = ApiService.isAuthenticated();
+  dispatch({ type: USER_IS_AUTHENTICATED, payload: token });
 };
 
 export const isAdmin = (dispatch) => {

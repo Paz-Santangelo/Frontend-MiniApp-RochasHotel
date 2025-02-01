@@ -10,6 +10,9 @@ import {
   UPDATE_ROOM,
   UPDATE_ROOM_SUCCESS,
   UPDATE_ROOM_FAILURE,
+  DELETE_ROOM_REQUEST,
+  DELETE_ROOM_SUCCESS,
+  DELETE_ROOM_FAILURE,
 } from "../actions/roomActions";
 
 const initialState = {
@@ -23,6 +26,8 @@ const initialState = {
   selectedRoom: null,
   isUpdating: false,
   updateError: null,
+  loading: false,
+  successMessage: null,
 };
 
 export const roomReducer = (state, action) => {
@@ -96,6 +101,27 @@ export const roomReducer = (state, action) => {
         ...state,
         isUpdating: false,
         updateError: action.payload,
+      };
+    case DELETE_ROOM_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        successMessage: null,
+      };
+    case DELETE_ROOM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        rooms: state.rooms.filter((room) => room.id !== action.payload.roomId),
+        successMessage: action.payload,
+      };
+    case DELETE_ROOM_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        successMessage: null,
       };
     default:
       return state;

@@ -70,8 +70,7 @@ const RoomsPage = () => {
     Math.min(filteredRooms.length, indexOfLastRoom)
   );
 
-  const paginate = (pageNumber) =>
-    changePageAction(pageNumber)(dispatch);
+  const paginate = (pageNumber) => changePageAction(pageNumber)(dispatch);
 
   return (
     <Box sx={styles.boxContainerRoomsPage}>
@@ -99,6 +98,7 @@ const RoomsPage = () => {
         </Select>
       </FormControl>
 
+      {/* Si es administrador, las fechas y el tipo de habitacion se ocultan. */}
       <Box sx={styles.boxContainerInputsSearch}>
         <RoomSearch
           handleSearchResult={(results) => {

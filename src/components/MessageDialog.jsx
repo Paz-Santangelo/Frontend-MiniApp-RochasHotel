@@ -11,7 +11,13 @@ import {
   Divider,
 } from "@mui/material";
 
-const MessageDialog = ({ open, handleClose, onConfirmBooking, children, type = "info" }) => {
+const MessageDialog = ({
+  open,
+  handleClose,
+  onConfirmBooking,
+  children,
+  type = "info",
+}) => {
   return (
     <Dialog
       open={open}
@@ -43,18 +49,23 @@ const MessageDialog = ({ open, handleClose, onConfirmBooking, children, type = "
           {children.body}
         </Typography>
       </DialogContent>
-      <DialogActions sx={{ justifyContent: "center", mt: 1 }}>
-        <Button onClick={handleClose} variant="outlined" color="error" sx={{ px: 3 }}>
-          Cancelar
-        </Button>
+      <DialogActions sx={{ justifyContent: "center", mt: 1, gap: 2 }}>
         <Button
           onClick={onConfirmBooking}
           variant="contained"
-          color="success"
+          color={type === "warning" ? "error" : "primary"}
           sx={{ px: 3 }}
           autoFocus
         >
           {type === "warning" ? "Eliminar" : "Aceptar"}
+        </Button>
+        <Button
+          onClick={handleClose}
+          variant="outlined"
+          color="info"
+          sx={{ px: 3 }}
+        >
+          Cancelar
         </Button>
       </DialogActions>
     </Dialog>
