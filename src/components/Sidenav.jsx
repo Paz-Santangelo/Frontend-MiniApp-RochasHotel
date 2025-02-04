@@ -1,31 +1,41 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import HotelIcon from "@mui/icons-material/Hotel";
+import { Link, useLocation } from "react-router-dom";
 import { useReducer } from "react";
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import { useEffect } from "react";
-import { getUserData, isAuthenticated } from "../actions/userActions";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import {
+  getUserData,
+  isAdmin,
+  isAuthenticated,
+  isUser,
+} from "../actions/userActions";
 import ApiService from "../services/ApiService";
+import HotelIcon from "@mui/icons-material/Hotel";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 const Sidenav = () => {
   const location = useLocation();
   const { collapsed } = useProSidebar();
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
 
-  console.log(userState);
   const token = ApiService.isAuthenticated();
+  //console.log(userState);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      await isAuthenticated(userDispatch);
-      await getUserData(userDispatch);
-    };
-    fetchUserData();
-  }, [token, userState.isAuthenticated]);
+    if (token) {
+      isAuthenticated(userDispatch);
+      isAdmin(userDispatch);
+      isUser(userDispatch);
+      getUserData(userDispatch);
+    }
+  }, [token, userState.isAuthenticated, userState.isAdmin, userState.isUser]);
 
-  if (!userState.isAuthenticated) return null;
+  //console.log(localStorage.getItem("token"));
+  if (!localStorage.getItem("token")) return null;
 
   return (
     <Sidebar
@@ -74,27 +84,56 @@ const Sidenav = () => {
         }}
       >
         <MenuItem
-          routerLink={<Link to="/dashboard" />}
-          active={location.pathname === "/dashboard"}
+          routerLink={<Link to="/profile" />}
+          active={location.pathname === "/profile"}
           icon={<AdminPanelSettingsIcon />}
         >
-          <NavLink to={"/dashboard"} style={styles.navLink}>
-            <Typography variant="body2" sx={styles.link}>
-              Mi Perfil
-            </Typography>
-          </NavLink>
+          <Typography variant="body2" sx={styles.link}>
+            Mi Perfil
+          </Typography>
         </MenuItem>
+
         <MenuItem
           routerLink={<Link to="/habitaciones" />}
           active={location.pathname === "/habitaciones"}
           icon={<HotelIcon />}
         >
-          <NavLink to={"/habitaciones"} style={styles.navLink}>
-            <Typography variant="body2" sx={styles.link}>
-              Habitaciones
-            </Typography>
-          </NavLink>
+          <Typography variant="body2" sx={styles.link}>
+            Habitaciones
+          </Typography>
         </MenuItem>
+
+        <MenuItem
+          routerLink={<Link to="/reserva/buscar" />}
+          active={location.pathname === "/reserva/buscar"}
+          icon={<ContentPasteSearchIcon />}
+        >
+          <Typography variant="body2" sx={styles.link}>
+            Buscar Reserva
+          </Typography>
+        </MenuItem>
+
+        <MenuItem
+          routerLink={<Link to="/reservas" />}
+          active={location.pathname === "/reservas"}
+          icon={<CalendarMonthIcon />}
+        >
+          <Typography variant="body2" sx={styles.link}>
+            Reservas
+          </Typography>
+        </MenuItem>
+
+        {userState.isAdmin && (
+          <MenuItem
+            routerLink={<Link to="/usuarios" />}
+            active={location.pathname === "/usuarios"}
+            icon={<PeopleAltIcon />}
+          >
+            <Typography variant="body2" sx={styles.link}>
+              Usuarios
+            </Typography>
+          </MenuItem>
+        )}
       </Menu>
     </Sidebar>
   );

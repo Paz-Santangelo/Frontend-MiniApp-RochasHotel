@@ -1,9 +1,9 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useReducer, useState } from "react";
 import { initialUserState, userReducer } from "../reducers/userReducer";
-import { login } from "../actions/userActions";
 import NotificationAlert from "../components/NotificationAlert";
 import { useNavigate } from "react-router-dom";
+import { login } from "../actions/userActions";
 
 const LoginPage = () => {
   const [state, dispatch] = useReducer(userReducer, initialUserState);
@@ -16,6 +16,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
+  //console.log(state);
   const validateInputs = () => {
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const passwordValid = password.trim().length > 0;
@@ -46,12 +47,10 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (state.user !== null && state.error === null) {
-      navigate("/dashboard");
-    } else {
-      navigate("/login");
+    if (state.isAuthenticated && state.user) {
+      navigate("/profile");
     }
-  }, [state.user, state.error]);
+  }, [state.isAuthenticated, state.user, navigate]);
 
   const handleCloseAlert = () => {
     setAlertOpen(false);

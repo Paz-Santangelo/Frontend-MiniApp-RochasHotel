@@ -1,54 +1,30 @@
 import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import { useEffect, useReducer, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { initialRoomState, roomReducer } from "../reducers/roomReducer";
-import { fetchRoomDetails, updateRoomAction } from "../actions/roomActions"; // Importamos la acción updateRoomAction
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
+import { addRoomAction } from "../actions/roomActions";
 import NotificationAlert from "../components/NotificationAlert";
 
-const EditRoomPage = () => {
-  const { roomId } = useParams();
-  const navigate = useNavigate();
+const CreateRoom = () => {
   const [roomState, roomDispatch] = useReducer(roomReducer, initialRoomState);
   const [roomData, setRoomData] = useState({
-    existingImages: [],
     files: [],
     roomType: "",
     roomDescription: "",
     roomPrice: "",
   });
   const [alertOpen, setAlertOpen] = useState(false);
-  const [imagesToDelete, setImagesToDelete] = useState([]);
+  const [imagesToDelete] = useState([]);
+  const navigate = useNavigate();
 
-  const { selectedRoom, loading, error, successMessage } = roomState;
-  //console.log(selectedRoom);
+  const { loading, successMessage, error } = roomState;
 
-  // Cargar los detalles de la habitación al montar el componente
-  useEffect(() => {
-    fetchRoomDetails(roomId)(roomDispatch);
-  }, [roomId]);
-
-  // Actualizar el estado local (roomData) cuando selectedRoom cambie
-  useEffect(() => {
-    if (selectedRoom) {
-      setRoomData({
-        existingImages:
-          selectedRoom.imagesRoom?.map((img) => img.urlImage) || [],
-        files: [], // Mantener las nuevas imágenes por separado
-        roomType: selectedRoom.roomType || "",
-        roomDescription: selectedRoom.roomDescription || "",
-        roomPrice: selectedRoom.roomPrice || "",
-      });
-    }
-  }, [selectedRoom]);
-
-  // Manejar cambios en los inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setRoomData({ ...roomData, [name]: value });
   };
 
-  // Manejar cambios en las imágenes
   const handleImagesChange = (e) => {
     const newFiles = Array.from(e.target.files);
     setRoomData((prev) => ({
@@ -57,29 +33,12 @@ const EditRoomPage = () => {
     }));
   };
 
-  const handleRemoveExistingImage = (index) => {
-    const updatedImages = [...roomData.existingImages];
-    const removedImage = updatedImages.splice(index, 1)[0];
-    setRoomData({ ...roomData, existingImages: updatedImages });
-    setImagesToDelete([...imagesToDelete, removedImage]);
-  };
-
   const handleRemoveNewImage = (index) => {
     const updatedFiles = [...roomData.files];
     updatedFiles.splice(index, 1);
     setRoomData({ ...roomData, files: updatedFiles });
   };
 
-  // Convertir una URL de imagen en un archivo File
-  const urlToFile = async (url, index) => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new File([blob], `${selectedRoom.imagesRoom[index].name}`, {
-      type: blob.type,
-    });
-  };
-
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,15 +46,6 @@ const EditRoomPage = () => {
     formData.append("roomType", roomData.roomType);
     formData.append("roomDescription", roomData.roomDescription);
     formData.append("roomPrice", roomData.roomPrice);
-
-    // Convertir imágenes existentes a archivos y agregarlas a FormData
-    const existingFiles = await Promise.all(
-      roomData.existingImages.map((url, index) => urlToFile(url, index))
-    );
-
-    existingFiles.forEach((file) => {
-      formData.append("files", file);
-    });
 
     // Agregar nuevas imágenes
     roomData.files.forEach((file) => {
@@ -106,9 +56,12 @@ const EditRoomPage = () => {
       formData.append("imagesToDelete", image);
     });
 
-    //console.log("Enviando datos:", formData.entries());
+    /* console.log("Enviando datos:");
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    } */
 
-    updateRoomAction(roomId, formData)(roomDispatch);
+    addRoomAction(formData)(roomDispatch);
   };
 
   useEffect(() => {
@@ -126,17 +79,10 @@ const EditRoomPage = () => {
   };
 
   return (
-    <Box sx={styles.boxContainerEditRoomPage}>
+    <Box sx={styles.boxContainerCreateRoomPage}>
       <Typography variant="h4" component="h2" align="center" gutterBottom>
-        Editar Habitación
+        Agregar nueva habitación
       </Typography>
-
-      {/* Mostrar errores de actualización */}
-      {error && (
-        <Typography color="error" align="center" gutterBottom>
-          {error}
-        </Typography>
-      )}
 
       <form onSubmit={handleSubmit}>
         <TextField
@@ -174,26 +120,6 @@ const EditRoomPage = () => {
           style={{ marginTop: 16 }}
         />
         <Box sx={styles.boxContainerImages}>
-          {/* Imágenes previas */}
-          {roomData.existingImages.map((urlImage, index) => (
-            <Box key={`existing-${index}`} sx={styles.boxImages}>
-              <img
-                src={urlImage}
-                alt={`Preview ${index}`}
-                width={100}
-                height={100}
-                style={{ objectFit: "cover", borderRadius: 8 }}
-              />
-              <IconButton
-                sx={styles.iconButton}
-                onClick={() => handleRemoveExistingImage(index)}
-              >
-                <DeleteIcon fontSize="small" color="black" />
-              </IconButton>
-            </Box>
-          ))}
-
-          {/* Imágenes nuevas */}
           {roomData.files.map((file, index) => (
             <Box key={`new-${index}`} sx={styles.boxImages}>
               <img
@@ -220,7 +146,7 @@ const EditRoomPage = () => {
             sx={{ mt: 2 }}
             disabled={loading}
           >
-            {loading ? "Guardando..." : "Guardar Cambios"}
+            {loading ? "Guardando..." : "Guardar"}
           </Button>
           <Button
             variant="contained"
@@ -245,7 +171,7 @@ const EditRoomPage = () => {
 
 /** @type {import("@mui/material").SxProps}  */
 const styles = {
-  boxContainerEditRoomPage: {
+  boxContainerCreateRoomPage: {
     maxWidth: 600,
     margin: "auto",
     p: 3,
@@ -278,4 +204,4 @@ const styles = {
   },
 };
 
-export default EditRoomPage;
+export default CreateRoom;

@@ -2,13 +2,17 @@ import { Route, Routes } from "react-router-dom";
 import RoomDetailsPage from "../pages/RoomDetailsPage";
 import RoomsPage from "../pages/RoomsPage";
 import { AdminRoute, ProtectedRoute } from "../services/guard";
-import DashboardPage from "../pages/DashboardPage";
 import EditRoomPage from "../pages/EditRoomPage";
 import HomePage from "../pages/HomePage";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
 import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
+import FindBookingPage from "../pages/FindBookingPage";
+import AllMyBookings from "../pages/AllMyBookings";
+import MyProfile from "../pages/MyProfile";
+import AllUsers from "../components/AllUsers";
+import CreateRoom from "../pages/CreateRoom";
 
 const AppRoutes = () => {
   return (
@@ -22,13 +26,29 @@ const AppRoutes = () => {
       <Route path="/habitaciones" element={<RoomsPage />} />
       {/* Rutas Protegidas */}
       <Route
-        path="/dashboard"
-        element={<ProtectedRoute element={<DashboardPage />} />}
+        path="/profile"
+        element={<ProtectedRoute element={<MyProfile />} />}
+      />
+      <Route
+        path="/reserva/buscar"
+        element={<ProtectedRoute element={<FindBookingPage />} />}
+      />
+      <Route
+        path="/reservas"
+        element={<ProtectedRoute element={<AllMyBookings />} />}
       />
       {/* Rutas de Administrador */}
       <Route
         path="/admin/editar/:roomId"
         element={<AdminRoute element={<EditRoomPage />} />}
+      />
+      <Route
+        path="/habitaciones/crear"
+        element={<AdminRoute element={<CreateRoom />} />}
+      />
+      <Route
+        path="/usuarios"
+        element={<AdminRoute element={<AllUsers />} />}
       />
     </Routes>
   );

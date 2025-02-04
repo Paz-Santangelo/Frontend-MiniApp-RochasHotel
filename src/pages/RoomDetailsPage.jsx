@@ -36,8 +36,6 @@ const RoomDetailsPage = () => {
   const navigate = useNavigate();
   const [roomState, roomDispatch] = useReducer(roomReducer, initialRoomState);
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
-  //console.log(userState);
-  
   const [bookingState, bookingDispatch] = useReducer(bookingReducer, {
     loading: false,
     success: false,
@@ -69,6 +67,39 @@ const RoomDetailsPage = () => {
       roomDispatch(clearRoomDetails());
     };
   }, [roomId, navigate]);
+
+  useEffect(() => {
+    if (roomState.successMessage) {
+      setOpenDialog(false);
+      setAlertOpen(true);
+      setTimeout(() => {
+        navigate("/habitaciones");
+      }, 3000);
+    }
+    if (roomState.error) {
+      setOpenDialog(false);
+      setAlertOpen(true);
+    }
+
+    if (bookingState.bookingDetails) {
+      setOpenDialog(false);
+      setAlertOpen(true);
+      setTimeout(() => {
+        navigate("/reservas");
+      }, 3000);
+    }
+
+    if (bookingState.error) {
+      setOpenDialog(false);
+      setAlertOpen(true);
+    }
+  }, [
+    roomState.successMessage,
+    roomState.error,
+    bookingState.bookingDetails,
+    bookingState.error,
+    navigate,
+  ]);
 
   const { selectedRoom } = roomState;
 
@@ -143,7 +174,6 @@ const RoomDetailsPage = () => {
     //console.log("Datos de la reserva: ", bookingData);
 
     bookRoom(roomId, userState.user.id, bookingData)(bookingDispatch);
-    setAlertOpen(true);
   };
 
   const handleConfirmDialog = () => {
@@ -185,10 +215,8 @@ const RoomDetailsPage = () => {
   };
 
   const handleDeleteRoom = async () => {
-    console.log("Eliminar habitación:", roomId);
+    //console.log("Eliminar habitación:", roomId);
     await deleteRoomAction(roomId)(roomDispatch);
-    setOpenDialog(false);
-    setAlertOpen(true);
   };
 
   return (
@@ -391,8 +419,10 @@ const RoomDetailsPage = () => {
         severity={bookingState.error || roomState.error ? "error" : "success"}
         message={
           userState.isAdmin
-            ? roomState.error || roomState.successMessage || "Habitación eliminada con éxito."
-            : bookingState.error || "Reserva realizada con éxito."
+            ? roomState.error ||
+              roomState.successMessage ||
+              "Habitación eliminada con éxito."
+            : bookingState.error || bookingState.bookingDetails
         }
       />
     </>

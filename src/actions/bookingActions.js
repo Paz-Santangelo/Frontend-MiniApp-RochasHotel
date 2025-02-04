@@ -13,7 +13,7 @@ export const bookRoom = (roomId, userId, bookingData) => async (dispatch) => {
     dispatch({ type: BOOKING_SUCCESS, payload: response.data });
   } catch (error) {
     const message =
-      error.response?.data?.error || error.response?.data || "Error de conexión con el servidor.";
+      error.response?.data?.error || error.response?.data || "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
       //console.log(message);
       
     dispatch({

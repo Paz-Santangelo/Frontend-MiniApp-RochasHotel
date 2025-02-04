@@ -2,6 +2,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -20,15 +21,21 @@ import {
 import NotificationAlert from "../components/NotificationAlert";
 import RoomsResult from "../components/RoomsResult";
 import CustomPagination from "../components/CustomPagination";
+import { useNavigate } from "react-router-dom";
+import { initialUserState, userReducer } from "../reducers/userReducer";
+import { isAdmin } from "../actions/userActions";
 
 const RoomsPage = () => {
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(roomReducer, initialRoomState);
+  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
   const [alertState, setAlertState] = useState({
     open: false,
     message: "",
     severity: "success",
   });
 
+  //console.log(userState);
   const {
     filteredRooms,
     roomTypes,
@@ -49,13 +56,13 @@ const RoomsPage = () => {
     const fetchRooms = async () => {
       await fetchRoomsAction()(dispatch);
     };
-
     const fetchRoomTypes = async () => {
       await fetchRoomTypesAction()(dispatch);
     };
-
     fetchRooms();
     fetchRoomTypes();
+
+    isAdmin(userDispatch);
   }, []);
 
   const handleRoomTypeChange = (e) => {
@@ -74,9 +81,21 @@ const RoomsPage = () => {
 
   return (
     <Box sx={styles.boxContainerRoomsPage}>
-      <Typography variant="h4" sx={{ mb: 2 }}>
-        Habitaciones
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="h4" sx={{ mb: 2 }}>
+          Habitaciones
+        </Typography>
+        {userState.isAdmin && (
+          <Button
+            variant="contained"
+            color="success"
+            size="medium"
+            onClick={() => navigate("/habitaciones/crear")}
+          >
+            Crear Habitación
+          </Button>
+        )}
+      </Box>
 
       <FormControl required sx={{ minWidth: 300 }}>
         <InputLabel id="demo-simple-select-required-label">
@@ -98,7 +117,6 @@ const RoomsPage = () => {
         </Select>
       </FormControl>
 
-      {/* Si es administrador, las fechas y el tipo de habitacion se ocultan. */}
       <Box sx={styles.boxContainerInputsSearch}>
         <RoomSearch
           handleSearchResult={(results) => {
@@ -110,14 +128,12 @@ const RoomsPage = () => {
       <Box sx={{ margin: "2rem" }}>
         <RoomsResult roomSearchResults={currentRooms} />
       </Box>
-
       <NotificationAlert
         message={alertState.message}
         severity={alertState.severity}
         open={alertState.open}
         onClose={handleAlertClose}
       />
-
       <CustomPagination
         roomsPerPage={roomsPerPage}
         totalRooms={filteredRooms.length}

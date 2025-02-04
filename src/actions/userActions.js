@@ -24,8 +24,14 @@ export const login = async (dispatch, loginDetails) => {
     } else {
       throw new Error("Datos incompletos del servidor.");
     }
+    const token = ApiService.isAuthenticated();
+    const isAdmin = ApiService.isAdmin();
+    const isUser = ApiService.isUser();
 
     dispatch({ type: USER_LOGIN_SUCCESS, payload: response });
+    dispatch({ type: USER_IS_AUTHENTICATED, payload: token });
+    dispatch({ type: USER_IS_ADMIN, payload: isAdmin });
+    dispatch({ type: USER_IS_USER, payload: isUser });
   } catch (error) {
     const message =
       error.response?.data || "Error de conexión con el servidor.";

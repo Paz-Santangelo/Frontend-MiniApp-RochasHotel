@@ -52,7 +52,9 @@ const Navbar = () => {
   const token = ApiService.isAuthenticated();
 
   useEffect(() => {
-    isAuthenticated(dispatch);
+    if (token) {
+      isAuthenticated(dispatch);
+    }
   }, [token, state.isAuthenticated]);
 
   const handleLogout = () => {

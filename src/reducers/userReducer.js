@@ -32,7 +32,9 @@ export const userReducer = (state, action) => {
         loading: false,
         user: action.payload,
         error: null,
-        isAuthenticated: true,
+        isAuthenticated: action.payload,
+        isAdmin: action.payload.role === "admin",
+        isUser: action.payload.role === "user",
       };
     case USER_LOGIN_FAILURE:
       return {
@@ -44,6 +46,7 @@ export const userReducer = (state, action) => {
     case USER_LOGOUT:
       return { ...initialState };
     case USER_IS_AUTHENTICATED:
+      //console.log(action.payload);
       return { ...state, isAuthenticated: action.payload };
     case USER_IS_ADMIN:
       return { ...state, isAdmin: action.payload };

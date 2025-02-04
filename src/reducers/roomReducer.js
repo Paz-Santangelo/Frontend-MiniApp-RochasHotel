@@ -13,20 +13,21 @@ import {
   DELETE_ROOM_REQUEST,
   DELETE_ROOM_SUCCESS,
   DELETE_ROOM_FAILURE,
+  ADD_ROOM,
+  ADD_ROOM_SUCCESS,
+  ADD_ROOM_FAILURE,
 } from "../actions/roomActions";
 
 const initialState = {
   rooms: [],
   filteredRooms: [],
   error: null,
+  loading: false,
   roomTypes: [],
   selectedRoomType: "all",
   currentPage: 1,
   roomsPerPage: 6,
   selectedRoom: null,
-  isUpdating: false,
-  updateError: null,
-  loading: false,
   successMessage: null,
 };
 
@@ -81,13 +82,13 @@ export const roomReducer = (state, action) => {
     case UPDATE_ROOM:
       return {
         ...state,
-        isUpdating: true,
-        updateError: null,
+        loading: true,
+        error: null,
       };
     case UPDATE_ROOM_SUCCESS:
       return {
         ...state,
-        isUpdating: false,
+        loading: false,
         rooms: state.rooms.map((room) =>
           room.id === action.payload.id ? action.payload : room
         ),
@@ -95,12 +96,13 @@ export const roomReducer = (state, action) => {
           room.id === action.payload.id ? action.payload : room
         ),
         selectedRoom: action.payload,
+        successMessage: "Habitación actualizada con éxito.",
       };
     case UPDATE_ROOM_FAILURE:
       return {
         ...state,
-        isUpdating: false,
-        updateError: action.payload,
+        loading: false,
+        error: action.payload,
       };
     case DELETE_ROOM_REQUEST:
       return {
@@ -117,6 +119,26 @@ export const roomReducer = (state, action) => {
         successMessage: action.payload,
       };
     case DELETE_ROOM_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        successMessage: null,
+      };
+    case ADD_ROOM:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case ADD_ROOM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        successMessage: action.payload,
+      };
+    case ADD_ROOM_FAILURE:
       return {
         ...state,
         loading: false,

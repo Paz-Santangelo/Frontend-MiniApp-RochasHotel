@@ -9,9 +9,9 @@ import Navbar from "./components/Navbar";
 import { BrowserRouter } from "react-router-dom";
 import { Box, CssBaseline } from "@mui/material";
 import Sidenav from "./components/Sidenav";
-import React from "react";
 import AppRoutes from "./router/AppRoutes";
 import { ProSidebarProvider } from "react-pro-sidebar";
+import React from "react";
 
 function App() {
   return (
@@ -19,13 +19,13 @@ function App() {
       <ProSidebarProvider>
         <CssBaseline />
         <BrowserRouter>
-          <Navbar />
-          <Box sx={styles.container}>
-            <Sidenav />
-            <Box component={"main"} sx={styles.mainSection}>
-              <AppRoutes />
+            <Navbar />
+            <Box sx={styles.container}>
+              <Sidenav />
+              <Box component={"main"} sx={styles.mainSection}>
+                <AppRoutes />
+              </Box>
             </Box>
-          </Box>
         </BrowserRouter>
       </ProSidebarProvider>
     </React.Fragment>
@@ -37,8 +37,7 @@ const styles = {
   container: {
     display: "flex",
     bgcolor: "neutral.light",
-    height:
-      "calc(100% - 64px)" 
+    height: "calc(100% - 64px)",
   },
   mainSection: {
     width: "100%",

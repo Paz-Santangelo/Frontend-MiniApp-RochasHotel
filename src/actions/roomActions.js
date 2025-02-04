@@ -14,6 +14,9 @@ export const UPDATE_ROOM_FAILURE = "UPDATE_ROOM_FAILURE";
 export const DELETE_ROOM_REQUEST = "DELETE_ROOM_REQUEST";
 export const DELETE_ROOM_SUCCESS = "DELETE_ROOM_SUCCESS";
 export const DELETE_ROOM_FAILURE = "DELETE_ROOM_FAILURE";
+export const ADD_ROOM = "ADD_ROOM";
+export const ADD_ROOM_SUCCESS = "ADD_ROOM_SUCCESS";
+export const ADD_ROOM_FAILURE = "ADD_ROOM_FAILURE";
 
 export const fetchRoomsAction = () => async (dispatch) => {
   try {
@@ -25,7 +28,7 @@ export const fetchRoomsAction = () => async (dispatch) => {
     const message =
       error.response?.data?.error ||
       error.response?.data ||
-      "Error de conexión con el servidor.";
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
 
     dispatch({ type: FETCH_ROOMS_FAILURE, payload: message });
   }
@@ -41,7 +44,7 @@ export const fetchRoomTypesAction = () => async (dispatch) => {
     const message =
       error.response?.data?.error ||
       error.response?.data ||
-      "Error de conexión con el servidor.";
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
 
     dispatch({ type: FETCH_ROOMS_FAILURE, payload: message });
   }
@@ -84,7 +87,7 @@ export const fetchAvailableRoomsByDateAndType =
       const message =
         error.response?.data?.error ||
         error.response?.data ||
-        "Error de conexión con el servidor.";
+        "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
 
       dispatch({ type: FETCH_ROOMS_FAILURE, payload: message });
     }
@@ -106,8 +109,8 @@ export const updateRoomAction = (roomId, formData) => async (dispatch) => {
     const message =
       error.response?.data?.error ||
       error.response?.data ||
-      "Error de conexión con el servidor.";
-    console.error(message);
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
+    //console.error(message);
     dispatch({ type: UPDATE_ROOM_FAILURE, payload: message });
   }
 };
@@ -118,7 +121,7 @@ export const deleteRoomAction = (roomId) => async (dispatch) => {
   try {
     const response = await ApiService.deleteRoom(roomId);
     //console.log("Habitación eliminada:", response.data);
-    
+
     dispatch({ type: DELETE_ROOM_SUCCESS, payload: response.data });
   } catch (error) {
     const message =
@@ -127,5 +130,20 @@ export const deleteRoomAction = (roomId) => async (dispatch) => {
       "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
     //console.error(message);
     dispatch({ type: DELETE_ROOM_FAILURE, payload: message });
+  }
+};
+
+export const addRoomAction = (formData) => async (dispatch) => {
+  dispatch({ type: ADD_ROOM });
+
+  try {
+    const result = await ApiService.addRoom(formData);
+    dispatch({ type: ADD_ROOM_SUCCESS, payload: result.data });
+  } catch (error) {
+    const message =
+      error.response?.data?.error ||
+      error.response?.data ||
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
+    dispatch({ type: ADD_ROOM_FAILURE, payload: message });
   }
 };
