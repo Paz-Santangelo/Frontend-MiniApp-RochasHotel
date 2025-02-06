@@ -39,7 +39,7 @@ const Sidenav = () => {
 
   return (
     <Sidebar
-      style={{ minHeight: "100vh", top: "auto" }}
+      style={{ minHeight: "calc(100vh - 71.58px)", top: "auto" }}
       breakPoint="md"
       backgroundColor="black"
     >

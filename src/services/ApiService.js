@@ -37,6 +37,7 @@ export default class ApiService {
     return response.data;
   }
 
+  /* Trae al usuario sin sus reservas, solo sus datos */
   static async getUserProfile() {
     const response = await axios.get(`${this.BASE_URL}/users/logged`, {
       headers: this.getHeader(),
@@ -44,7 +45,7 @@ export default class ApiService {
     return response.data;
   }
 
-  /* This is the  to get a single user */
+  /* Trae al usuario sin sus reservas, solo sus datos */
   static async getUser(userId) {
     const response = await axios.get(`${this.BASE_URL}/users/${userId}`, {
       headers: this.getHeader(),
@@ -52,7 +53,7 @@ export default class ApiService {
     return response.data;
   }
 
-  /* This is the  to get user bookings by the user id */
+  /* Trae al usuario con sus reservas */
   static async getUserBookings(userId) {
     const response = await axios.get(
       `${this.BASE_URL}/users/bookings/${userId}`,
@@ -60,10 +61,9 @@ export default class ApiService {
         headers: this.getHeader(),
       }
     );
-    return response.data;
+    return response;
   }
 
-  /* This is to delete a user */
   static async deleteUser(userId) {
     const response = await axios.delete(
       `${this.BASE_URL}/users/delete/${userId}`,
@@ -71,7 +71,21 @@ export default class ApiService {
         headers: this.getHeader(),
       }
     );
-    return response.data;
+    return response;
+  }
+
+  static async updateUser(userId, formData) {
+    const result = await axios.put(
+      `${this.BASE_URL}/users/update/${userId}`,
+      formData,
+      {
+        headers: {
+          ...this.getHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return result;
   }
 
   /**AUTHENTICATION CHECKER */

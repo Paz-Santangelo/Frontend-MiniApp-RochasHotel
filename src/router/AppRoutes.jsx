@@ -13,6 +13,7 @@ import AllMyBookings from "../pages/AllMyBookings";
 import MyProfile from "../pages/MyProfile";
 import AllUsers from "../components/AllUsers";
 import CreateRoom from "../pages/CreateRoom";
+import EditMyProfile from "../pages/EditMyProfile";
 
 const AppRoutes = () => {
   return (
@@ -28,6 +29,10 @@ const AppRoutes = () => {
       <Route
         path="/profile"
         element={<ProtectedRoute element={<MyProfile />} />}
+      />
+      <Route
+        path="/profile/editar"
+        element={<ProtectedRoute element={<EditMyProfile />} />}
       />
       <Route
         path="/reserva/buscar"

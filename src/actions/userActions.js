@@ -11,6 +11,14 @@ export const USER_DATA = "USER_DATA";
 export const USER_REGISTER_REQUEST = "USER_REGISTER_REQUEST";
 export const USER_REGISTER_SUCCESS = "USER_REGISTER_SUCCESS";
 export const USER_REGISTER_FAILURE = "USER_REGISTER_FAILURE";
+export const USER_UPDATE = "USER_UPDATE";
+export const USER_UPDATE_SUCCESS = "USER_UPDATE_SUCCESS";
+export const USER_UPDATE_FAILURE = "USER_UPDATE_FAILURE";
+export const USER_DELETE = "USER_DELETE";
+export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
+export const USER_DELETE_FAILURE = "USER_DELETE_FAILURE";
+export const USER_BOOKINGS_SUCCESS = "USER_BOOKINGS_SUCCESS";
+export const USER_BOOKINGS_FAILURE = "USER_BOOKINGS_FAILURE";
 
 export const login = async (dispatch, loginDetails) => {
   dispatch({ type: USER_LOGIN_REQUEST });
@@ -78,5 +86,55 @@ export const registerUser = async (dispatch, registrationDetails) => {
       "Error de conexión con el servidor, inténtelo de nuevo más tarde.";
     console.log(message);
     dispatch({ type: USER_REGISTER_FAILURE, payload: message });
+  }
+};
+
+export const updateUserAction = (userId, userData) => async (dispatch) => {
+  dispatch({ type: USER_UPDATE });
+
+  try {
+    const result = await ApiService.updateUser(userId, userData);
+
+    dispatch({ type: USER_UPDATE_SUCCESS, payload: result.data });
+  } catch (error) {
+    const message =
+      error.response?.data?.error ||
+      error.response?.data ||
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
+    //console.error(message);
+    dispatch({ type: USER_UPDATE_FAILURE, payload: message });
+  }
+};
+
+/* Falta implementar esta funcion. */
+export const deleteUserAction = (userId) => async (dispatch) => {
+  dispatch({ type: USER_DELETE });
+
+  try {
+    const response = await ApiService.deleteUser(userId);
+
+    dispatch({ type: USER_DELETE_SUCCESS, payload: response.data });
+  } catch (error) {
+    const message =
+      error.response?.data?.error ||
+      error.response?.data ||
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
+
+    dispatch({ type: USER_DELETE_FAILURE, payload: message });
+  }
+};
+
+export const getUserBookingsAction = (userId) => async (dispatch) => {
+  try {
+    const response = await ApiService.getUserBookings(userId);
+
+    dispatch({ type: USER_BOOKINGS_SUCCESS, payload: response.data });
+  } catch (error) {
+    const message =
+      error.response?.data?.error ||
+      error.response?.data ||
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
+
+    dispatch({ type: USER_BOOKINGS_FAILURE, payload: message });
   }
 };
