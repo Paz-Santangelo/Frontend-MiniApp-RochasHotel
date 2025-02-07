@@ -350,7 +350,7 @@ const RoomDetailsPage = () => {
         <MessageDialog
           open={openDialog}
           handleClose={handleCloseDialog}
-          onConfirmBooking={
+          onConfirm={
             userState.isAdmin ? handleDeleteRoom : handleConfirmDialog
           }
           type={userState.isAdmin ? "warning" : "info"}

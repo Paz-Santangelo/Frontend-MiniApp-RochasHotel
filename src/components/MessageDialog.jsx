@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
   Button,
   Box,
   Divider,
@@ -14,7 +13,7 @@ import {
 const MessageDialog = ({
   open,
   handleClose,
-  onConfirmBooking,
+  onConfirm,
   children,
   type = "info",
 }) => {
@@ -33,7 +32,6 @@ const MessageDialog = ({
       }}
     >
       <Box sx={{ textAlign: "center" }}>
-        {/* Ícono dinámico */}
         {type === "info" ? (
           <InfoOutlined sx={{ fontSize: 48, color: "primary.main" }} />
         ) : (
@@ -45,13 +43,11 @@ const MessageDialog = ({
       </Box>
       <Divider />
       <DialogContent sx={{ textAlign: "center", mt: 1 }}>
-        <Typography variant="body1" color="text.secondary">
-          {children.body}
-        </Typography>
+        <Box color="text.secondary">{children.body}</Box>
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", mt: 1, gap: 2 }}>
         <Button
-          onClick={onConfirmBooking}
+          onClick={onConfirm}
           variant="contained"
           color={type === "warning" ? "error" : "primary"}
           sx={{ px: 3 }}

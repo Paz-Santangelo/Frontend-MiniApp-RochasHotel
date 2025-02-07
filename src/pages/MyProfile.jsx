@@ -1,17 +1,23 @@
 import { Avatar, Box, Button, Typography } from "@mui/material";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import {
+  deleteUserAction,
   getUserData,
   isAdmin,
   isAuthenticated,
   isUser,
+  logout,
 } from "../actions/userActions";
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import { useNavigate } from "react-router-dom";
+import MessageDialog from "../components/MessageDialog";
+import NotificationAlert from "../components/NotificationAlert";
 
 const MyProfile = () => {
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
   const navigate = useNavigate();
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   //console.log(userState);
   useEffect(() => {
@@ -20,6 +26,36 @@ const MyProfile = () => {
     isUser(userDispatch);
     getUserData(userDispatch);
   }, [userState.isAuthenticated, userState.isAdmin, userState.isUser]);
+
+  useEffect(() => {
+    if (userState.successMessage) {
+      setAlertOpen(true);
+      setTimeout(() => {
+        logout(userDispatch);
+        navigate("/");
+      }, 3000);
+    }
+
+    if (userState.error) setAlertOpen(true);
+  }, [userState.successMessage, userState.error, navigate]);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleCloseAlert = () => {
+    setAlertOpen(false);
+  };
+
+  const handleDeleteUser = async () => {
+    console.log("Eliminar usuario " + userState.user?.id);
+    await deleteUserAction(userState.user?.id)(userDispatch);
+    setOpenDialog(false);
+  };
 
   const { user } = userState;
 
@@ -71,10 +107,34 @@ const MyProfile = () => {
           >
             Modificar
           </Button>
-          <Button variant="contained" color="error" sx={styles.button}>
+          <Button
+            variant="contained"
+            color="error"
+            sx={styles.button}
+            onClick={handleOpenDialog}
+          >
             Eliminar
           </Button>
         </Box>
+
+        <NotificationAlert
+          open={alertOpen}
+          onClose={handleCloseAlert}
+          severity={userState.error ? "error" : "success"}
+          message={userState.error || userState.successMessage}
+        />
+
+        <MessageDialog
+          open={openDialog}
+          handleClose={handleCloseDialog}
+          onConfirm={handleDeleteUser}
+          type="warning"
+        >
+          {{
+            title: "Eliminar Perfil",
+            body: `¿${userState.user?.name} estás seguro/a de eliminar tu perfil?`,
+          }}
+        </MessageDialog>
       </Box>
     </Box>
   );

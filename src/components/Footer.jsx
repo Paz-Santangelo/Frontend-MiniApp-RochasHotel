@@ -39,13 +39,28 @@ const Footer = () => {
             Seguinos
           </Typography>
           <Box>
-            <IconButton href="https://facebook.com" sx={styles.iconsFooter}>
+            <IconButton
+              href="https://facebook.com"
+              sx={styles.iconsFooter}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Facebook />
             </IconButton>
-            <IconButton href="https://instagram.com" sx={styles.iconsFooter}>
+            <IconButton
+              href="https://instagram.com"
+              sx={styles.iconsFooter}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Instagram />
             </IconButton>
-            <IconButton href="https://twitter.com" sx={styles.iconsFooter}>
+            <IconButton
+              href="https://twitter.com"
+              sx={styles.iconsFooter}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Twitter />
             </IconButton>
           </Box>

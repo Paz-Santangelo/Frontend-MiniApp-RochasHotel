@@ -60,7 +60,7 @@ const LoginPage = () => {
     <Box sx={styles.boxContainerLoginPage}>
       <Box sx={styles.boxContainerLogin}>
         <Typography variant="h4" sx={{ marginBottom: "1.5rem" }}>
-          Ingresá
+          Iniciar Sesión
         </Typography>
         <TextField
           fullWidth

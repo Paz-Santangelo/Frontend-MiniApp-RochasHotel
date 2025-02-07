@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   AppBar,
   Box,
@@ -12,10 +13,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LogoHotel from "../assets/logo-hotel.png";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useReducer } from "react";
-import { initialUserState, userReducer } from "../reducers/userReducer";
+import { useEffect } from "react";
 import { isAuthenticated, logout } from "../actions/userActions";
-import ApiService from "../services/ApiService";
 import { useProSidebar } from "react-pro-sidebar";
 
 /* cuando el usuario está logueando se deben ocultar los links y que esté únicamente el botón de cerrar sesión */
@@ -44,28 +43,25 @@ const pages = [
   },
 ];
 
-const Navbar = () => {
-  const [state, dispatch] = useReducer(userReducer, initialUserState);
+const Navbar = ({ userState, userDispatch }) => {
   const navigate = useNavigate();
   const { collapseSidebar, toggleSidebar, broken } = useProSidebar();
 
-  const token = ApiService.isAuthenticated();
+  //console.log(userState);
 
   useEffect(() => {
-    if (token) {
-      isAuthenticated(dispatch);
-    }
-  }, [token, state.isAuthenticated]);
+    isAuthenticated(userDispatch);
+  }, [userState.isAuthenticated, userDispatch]);
 
   const handleLogout = () => {
-    logout(dispatch);
+    logout(userDispatch);
     navigate("/");
   };
   return (
     <Box>
       <AppBar component="nav" sx={styles.appBar}>
         <Toolbar>
-          {state.isAuthenticated && (
+          {userState.isAuthenticated && (
             <IconButton
               onClick={() => (broken ? toggleSidebar() : collapseSidebar())}
               color="secondary"
@@ -76,13 +72,21 @@ const Navbar = () => {
           <Box
             component="img"
             src={LogoHotel}
-            sx={styles.logoHotel}
             alt="Logo del Hotel"
+            onClick={() => {
+              if (!userState.isAuthenticated) {
+                navigate("/"); // Redirige solo si no está autenticado
+              }
+            }}
+            sx={{
+              ...styles.logoHotel,
+              cursor: !userState.isAuthenticated ? "pointer" : "default",
+            }}
           />
 
           <Box sx={{ flexGrow: 1 }} />
 
-          {!state.isAuthenticated ? (
+          {!userState.isAuthenticated ? (
             <>
               <Box sx={styles.boxItemsNavigation}>
                 <List sx={styles.listItemsNavigation}>

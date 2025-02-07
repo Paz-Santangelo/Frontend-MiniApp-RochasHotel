@@ -202,7 +202,7 @@ const EditMyProfile = () => {
       <NotificationAlert
         open={alertOpen}
         onClose={handleCloseAlert}
-        severity={errorPassword ? "error" : userState.error ? "error" : "success"}
+        severity={errorPassword || userState.error ? "error" : "success"}
         message={userState.error || userState.successMessage || errorPassword}
       />
     </Box>

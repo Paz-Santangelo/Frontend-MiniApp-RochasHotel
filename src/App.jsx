@@ -6,28 +6,38 @@ import "@fontsource/roboto/700.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import { BrowserRouter } from "react-router-dom";
 import { Box, CssBaseline } from "@mui/material";
 import Sidenav from "./components/Sidenav";
 import AppRoutes from "./router/AppRoutes";
 import { ProSidebarProvider } from "react-pro-sidebar";
-import React from "react";
+import React, { useReducer } from "react";
+import { initialUserState, userReducer } from "./reducers/userReducer";
+import { AuthProvider } from "./services/AuthProvider";
 
 function App() {
+  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
+
   return (
     <React.Fragment>
       <ProSidebarProvider>
         <CssBaseline />
         <BrowserRouter>
-            <Navbar />
-            <Box sx={styles.container}>
-              <Sidenav />
-              <Box component={"main"} sx={styles.mainSection}>
-                <AppRoutes />
-              </Box>
+          <AuthProvider
+            userState={userState}
+            userDispatch={userDispatch}
+          ></AuthProvider>
+          <Navbar userState={userState} userDispatch={userDispatch} />
+          <Box sx={styles.container}>
+            <Sidenav />
+            <Box component={"main"} sx={styles.mainSection}>
+              <AppRoutes />
             </Box>
+          </Box>
         </BrowserRouter>
       </ProSidebarProvider>
+      <Footer />
     </React.Fragment>
   );
 }
