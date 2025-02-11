@@ -30,14 +30,14 @@ function App() {
           ></AuthProvider>
           <Navbar userState={userState} userDispatch={userDispatch} />
           <Box sx={styles.container}>
-            <Sidenav />
+            <Sidenav userState={userState} userDispatch={userDispatch} />
             <Box component={"main"} sx={styles.mainSection}>
               <AppRoutes />
             </Box>
           </Box>
         </BrowserRouter>
+        <Footer />
       </ProSidebarProvider>
-      <Footer />
     </React.Fragment>
   );
 }
@@ -47,11 +47,13 @@ const styles = {
   container: {
     display: "flex",
     bgcolor: "neutral.light",
-    height: "calc(100% - 64px)",
+    height: "calc(100% - 71.58px)",
   },
   mainSection: {
     width: "100%",
-    height: "100%",
+    height: "auto",
+    top: "71.58px",
+    position: "relative",
     overflow: "auto",
   },
 };

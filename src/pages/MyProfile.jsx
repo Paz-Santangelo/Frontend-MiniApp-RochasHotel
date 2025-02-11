@@ -52,7 +52,7 @@ const MyProfile = () => {
   };
 
   const handleDeleteUser = async () => {
-    console.log("Eliminar usuario " + userState.user?.id);
+    //console.log("Eliminar usuario " + userState.user?.id);
     await deleteUserAction(userState.user?.id)(userDispatch);
     setOpenDialog(false);
   };

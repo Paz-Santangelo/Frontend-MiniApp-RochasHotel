@@ -9,11 +9,12 @@ import ContactUs from "../pages/ContactUs";
 import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
 import FindBookingPage from "../pages/FindBookingPage";
-import AllMyBookings from "../pages/AllMyBookings";
+import Bookings from "../pages/Bookings";
 import MyProfile from "../pages/MyProfile";
 import AllUsers from "../components/AllUsers";
 import CreateRoom from "../pages/CreateRoom";
 import EditMyProfile from "../pages/EditMyProfile";
+import DetailBooking from "../pages/DetailBooking";
 
 const AppRoutes = () => {
   return (
@@ -25,6 +26,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/detalles/:roomId" element={<RoomDetailsPage />} />
       <Route path="/habitaciones" element={<RoomsPage />} />
+
       {/* Rutas Protegidas */}
       <Route
         path="/profile"
@@ -40,8 +42,9 @@ const AppRoutes = () => {
       />
       <Route
         path="/reservas"
-        element={<ProtectedRoute element={<AllMyBookings />} />}
+        element={<ProtectedRoute element={<Bookings />} />}
       />
+      
       {/* Rutas de Administrador */}
       <Route
         path="/admin/editar/:roomId"
@@ -50,6 +53,10 @@ const AppRoutes = () => {
       <Route
         path="/habitaciones/crear"
         element={<AdminRoute element={<CreateRoom />} />}
+      />
+      <Route
+        path="/admin/reservas/:confirmationCode"
+        element={<AdminRoute element={<DetailBooking />} />}
       />
       <Route
         path="/usuarios"

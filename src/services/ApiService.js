@@ -202,7 +202,7 @@ export default class ApiService {
     const result = await axios.get(`${this.BASE_URL}/bookings/all`, {
       headers: this.getHeader(),
     });
-    return result.data;
+    return result;
   }
 
   /* This  get booking by the cnfirmation code */
@@ -210,7 +210,7 @@ export default class ApiService {
     const result = await axios.get(
       `${this.BASE_URL}/bookings/confirmation/${bookingCode}`
     );
-    return result.data;
+    return result;
   }
 
   /* This is the  to cancel user booking */

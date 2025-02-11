@@ -82,8 +82,8 @@ const styles = {
   boxContainerFooter: {
     backgroundColor: "#333",
     color: "#fff",
-    padding: "2rem 1rem",
-    mt: "auto",
+    padding: "1.5rem 1rem",
+    mt: "4.4rem",
   },
   iconsFooter: {
     color: "#fff",

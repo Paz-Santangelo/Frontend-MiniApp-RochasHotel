@@ -1,8 +1,7 @@
+/* eslint-disable react/prop-types */
 import { Avatar, Box, Typography } from "@mui/material";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
-import { useReducer } from "react";
-import { initialUserState, userReducer } from "../reducers/userReducer";
 import { useEffect } from "react";
 import {
   getUserData,
@@ -10,36 +9,33 @@ import {
   isAuthenticated,
   isUser,
 } from "../actions/userActions";
-import ApiService from "../services/ApiService";
 import HotelIcon from "@mui/icons-material/Hotel";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
-const Sidenav = () => {
+const Sidenav = ({ userState, userDispatch }) => {
   const location = useLocation();
   const { collapsed } = useProSidebar();
-  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
-
-  const token = ApiService.isAuthenticated();
-  //console.log(userState);
 
   useEffect(() => {
-    if (token) {
-      isAuthenticated(userDispatch);
-      isAdmin(userDispatch);
-      isUser(userDispatch);
-      getUserData(userDispatch);
-    }
-  }, [token, userState.isAuthenticated, userState.isAdmin, userState.isUser]);
+    isAuthenticated(userDispatch);
+    isAdmin(userDispatch);
+    isUser(userDispatch);
+    getUserData(userDispatch);
+  }, [
+    userState.isAuthenticated,
+    userState.isAdmin,
+    userState.isUser,
+    userDispatch,
+  ]);
 
-  //console.log(localStorage.getItem("token"));
-  if (!localStorage.getItem("token")) return null;
+  if (!userState.isAuthenticated) return null;
 
   return (
     <Sidebar
-      style={{ minHeight: "calc(100vh - 71.58px)", top: "auto" }}
+      style={{ minHeight: "calc(100vh - 71.58px)", top: "71.58px" }}
       breakPoint="md"
       backgroundColor="black"
     >
@@ -99,27 +95,29 @@ const Sidenav = () => {
           icon={<HotelIcon />}
         >
           <Typography variant="body2" sx={styles.link}>
-            Habitaciones
+            {userState.isAdmin ? "Habitaciones" : "Reservar"}
           </Typography>
         </MenuItem>
 
-        <MenuItem
-          routerLink={<Link to="/reserva/buscar" />}
-          active={location.pathname === "/reserva/buscar"}
-          icon={<ContentPasteSearchIcon />}
-        >
-          <Typography variant="body2" sx={styles.link}>
-            Buscar Reserva
-          </Typography>
-        </MenuItem>
-
+        {userState.isUser && (
+          <MenuItem
+            routerLink={<Link to="/reserva/buscar" />}
+            active={location.pathname === "/reserva/buscar"}
+            icon={<ContentPasteSearchIcon />}
+          >
+            <Typography variant="body2" sx={styles.link}>
+              Buscar Reserva
+            </Typography>
+          </MenuItem>
+        )}
+        
         <MenuItem
           routerLink={<Link to="/reservas" />}
           active={location.pathname === "/reservas"}
           icon={<CalendarMonthIcon />}
         >
           <Typography variant="body2" sx={styles.link}>
-            Reservas
+          {userState.isAdmin ? "Reservas" : "Mis Reservas"}
           </Typography>
         </MenuItem>
 

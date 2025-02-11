@@ -17,8 +17,6 @@ import { useEffect } from "react";
 import { isAuthenticated, logout } from "../actions/userActions";
 import { useProSidebar } from "react-pro-sidebar";
 
-/* cuando el usuario está logueando se deben ocultar los links y que esté únicamente el botón de cerrar sesión */
-
 const pages = [
   {
     name: "Nosotros",
@@ -47,8 +45,6 @@ const Navbar = ({ userState, userDispatch }) => {
   const navigate = useNavigate();
   const { collapseSidebar, toggleSidebar, broken } = useProSidebar();
 
-  //console.log(userState);
-
   useEffect(() => {
     isAuthenticated(userDispatch);
   }, [userState.isAuthenticated, userDispatch]);
@@ -75,7 +71,7 @@ const Navbar = ({ userState, userDispatch }) => {
             alt="Logo del Hotel"
             onClick={() => {
               if (!userState.isAuthenticated) {
-                navigate("/"); // Redirige solo si no está autenticado
+                navigate("/");
               }
             }}
             sx={{
@@ -133,7 +129,7 @@ const Navbar = ({ userState, userDispatch }) => {
 const styles = {
   appBar: {
     bgcolor: "black",
-    position: "sticky",
+    position: "fixed",
   },
   logoHotel: {
     width: "3.5rem",
