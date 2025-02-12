@@ -103,7 +103,7 @@ const MyProfile = () => {
             variant="contained"
             color="primary"
             sx={styles.button}
-            onClick={() => navigate("/profile/editar")}
+            onClick={() => navigate("/perfil/editar")}
           >
             Modificar
           </Button>

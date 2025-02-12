@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  CircularProgress,
 } from "@mui/material";
 import { useEffect, useReducer, useState } from "react";
 import {
@@ -17,6 +18,8 @@ import {
   getAllBookings,
 } from "../actions/bookingActions";
 import { useNavigate } from "react-router-dom";
+import CustomPagination from "./CustomPagination";
+import NotificationAlert from "./NotificationAlert";
 
 const AllBookings = () => {
   const [bookingState, bookingDispatch] = useReducer(
@@ -24,13 +27,22 @@ const AllBookings = () => {
     initialBookingState
   );
 
-  //console.log(bookingState)
-  const [confirmationCode, setConfirmationCode] = useState("");
   const navigate = useNavigate();
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [filteredBookings, setFilteredBookings] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const bookingsPerPage = 6;
+  const [alertOpen, setAlertOpen] = useState(false);
 
   useEffect(() => {
     getAllBookings()(bookingDispatch);
   }, []);
+
+  useEffect(() => {
+    setFilteredBookings(bookingState.allBookings);
+
+    if (bookingState.error) setAlertOpen(true);
+  }, [bookingState.allBookings, bookingState.error]);
 
   const handleSearch = () => {
     if (confirmationCode.trim() === "") {
@@ -39,6 +51,19 @@ const AllBookings = () => {
       fetchBookingByConfirmationCode(confirmationCode)(bookingDispatch);
     }
   };
+
+  const handleCloseAlert = () => {
+    setAlertOpen(false);
+  };
+
+  const indexOfLastBooking = currentPage * bookingsPerPage;
+  const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
+  const currentBookings = filteredBookings.slice(
+    indexOfFirstBooking,
+    indexOfLastBooking
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const renderBookingCard = (booking) => (
     <Card sx={styles.card} key={booking.id}>
@@ -95,16 +120,38 @@ const AllBookings = () => {
         </Button>
       </Box>
 
-      {bookingState.loading && <Typography>Cargando...</Typography>}
-      {bookingState.error && (
-        <Typography color="error">{bookingState.error}</Typography>
+      {bookingState.loading && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="50vh"
+        >
+          <CircularProgress />
+        </Box>
       )}
 
       <Box sx={styles.boxContainerCards}>
         {confirmationCode.trim() && bookingState.bookingByConfirmation
           ? renderBookingCard(bookingState.bookingByConfirmation)
-          : bookingState.allBookings.map(renderBookingCard)}
+          : currentBookings.map(renderBookingCard)}
       </Box>
+
+      {filteredBookings.length > bookingsPerPage && (
+        <CustomPagination
+          roomsPerPage={bookingsPerPage}
+          totalRooms={filteredBookings.length}
+          currentPage={currentPage}
+          paginate={paginate}
+        />
+      )}
+
+      <NotificationAlert
+        open={alertOpen}
+        onClose={handleCloseAlert}
+        severity={bookingState.error ? "error" : ""}
+        message={bookingState.error}
+      />
     </Box>
   );
 };

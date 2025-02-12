@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { isAuthenticated, logout } from "../actions/userActions";
+import { isAuthenticated } from "../actions/userActions";
 
 export const AuthProvider = ({ children, userState, userDispatch }) => {
   const navigate = useNavigate();
@@ -12,7 +12,9 @@ export const AuthProvider = ({ children, userState, userDispatch }) => {
     isAuthenticated(userDispatch);
     const handleLogoutOnClose = () => {
       if (userState.isAuthenticated) {
-        logout(userDispatch);
+        navigate("/");
+      }
+      if (!userState.isAuthenticated) {
         navigate("/");
       }
     };

@@ -250,8 +250,9 @@ const RoomDetailsPage = () => {
             <Typography variant="h6" sx={styles.price}>
               Precio: ${selectedRoom.roomPrice}
             </Typography>
+            <Box sx={styles.boxButtons}>
             <Button
-              size="large"
+              size="small"
               variant="contained"
               color="primary"
               sx={styles.button}
@@ -260,7 +261,7 @@ const RoomDetailsPage = () => {
               {userState.isAdmin ? "Editar" : "Reservar"}
             </Button>
             <Button
-              size="large"
+              size="small"
               variant="contained"
               color="error"
               sx={styles.button}
@@ -268,6 +269,7 @@ const RoomDetailsPage = () => {
             >
               {userState.isAdmin ? "Eliminar" : "Cancelar"}
             </Button>
+            </Box>
           </Box>
         </Container>
         {showBooking && (
@@ -521,7 +523,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    gap: 3,
+    gap: 2,
     marginTop: "3rem",
   },
 };

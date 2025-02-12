@@ -217,7 +217,7 @@ const EditRoomPage = () => {
             type="submit"
             variant="contained"
             color="success"
-            sx={{ mt: 2 }}
+            sx={styles.button}
             disabled={loading}
           >
             {loading ? "Guardando..." : "Guardar Cambios"}
@@ -225,7 +225,7 @@ const EditRoomPage = () => {
           <Button
             variant="contained"
             color="error"
-            sx={{ mt: 2 }}
+            sx={styles.button}
             onClick={() => navigate("/habitaciones")}
           >
             Cancelar
@@ -265,6 +265,15 @@ const styles = {
     justifyContent: "flex-end",
     gap: 3,
     mt: 3,
+    "@media (max-width: 600px)": {
+      gap: 2,
+    }
+  },
+  button: {
+    "@media (max-width: 600px)": {
+      width: "8rem",
+      fontSize: "0.8rem",
+    },
   },
   iconButton: {
     position: "absolute",

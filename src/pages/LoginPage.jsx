@@ -48,7 +48,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (state.isAuthenticated && state.user) {
-      navigate("/profile");
+      navigate("/");
     }
   }, [state.isAuthenticated, state.user, navigate]);
 

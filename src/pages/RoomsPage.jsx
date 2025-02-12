@@ -81,7 +81,7 @@ const RoomsPage = () => {
 
   return (
     <Box sx={styles.boxContainerRoomsPage}>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={styles.boxContainerTitleAndCreateButton}>
         <Typography variant="h4" sx={{ mb: 2 }}>
           Habitaciones
         </Typography>
@@ -89,7 +89,7 @@ const RoomsPage = () => {
           <Button
             variant="contained"
             color="success"
-            size="medium"
+            size="small"
             onClick={() => navigate("/habitaciones/crear")}
           >
             Crear Habitación
@@ -97,7 +97,7 @@ const RoomsPage = () => {
         )}
       </Box>
 
-      <FormControl required sx={{ minWidth: 300 }}>
+      <FormControl required sx={{ minWidth: 200 }}>
         <InputLabel id="demo-simple-select-required-label">
           Filtrar por tipo de habitación:
         </InputLabel>
@@ -153,6 +153,16 @@ const styles = {
       display: "flex",
       flexDirection: "column",
       textAlign: "center",
+      gap: 3,
+    },
+  },
+  boxContainerTitleAndCreateButton: {
+    display: "flex",
+    justifyContent: "space-between",
+    "@media (max-width: 600px)": {
+      flexDirection: "column",
+      gap: 1,
+      mb: 2,
     },
   },
   boxContainerInputsSearch: {
@@ -165,7 +175,7 @@ const styles = {
     justifyContent: "center",
     "@media (max-width: 600px)": {
       flexDirection: "column",
-      gap: 1,
+      gap: 3,
       textAlign: "center",
     },
   },

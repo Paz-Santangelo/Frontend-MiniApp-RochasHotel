@@ -3,11 +3,6 @@ import RoomDetailsPage from "../pages/RoomDetailsPage";
 import RoomsPage from "../pages/RoomsPage";
 import { AdminRoute, ProtectedRoute } from "../services/guard";
 import EditRoomPage from "../pages/EditRoomPage";
-import HomePage from "../pages/HomePage";
-import AboutUs from "../pages/AboutUs";
-import ContactUs from "../pages/ContactUs";
-import RegisterPage from "../pages/RegisterPage";
-import LoginPage from "../pages/LoginPage";
 import FindBookingPage from "../pages/FindBookingPage";
 import Bookings from "../pages/Bookings";
 import MyProfile from "../pages/MyProfile";
@@ -15,25 +10,21 @@ import AllUsers from "../components/AllUsers";
 import CreateRoom from "../pages/CreateRoom";
 import EditMyProfile from "../pages/EditMyProfile";
 import DetailBooking from "../pages/DetailBooking";
+import UserHomeComponent from "../pages/UserHomeComponent";
 
-const AppRoutes = () => {
+const PrivateRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/nosotros" element={<AboutUs />} />
-      <Route path="/contacto" element={<ContactUs />} />
-      <Route path="/registrate" element={<RegisterPage />} />
-      <Route path="/login" element={<LoginPage />} />
       <Route path="/detalles/:roomId" element={<RoomDetailsPage />} />
       <Route path="/habitaciones" element={<RoomsPage />} />
 
       {/* Rutas Protegidas */}
       <Route
-        path="/profile"
+        path="/perfil"
         element={<ProtectedRoute element={<MyProfile />} />}
       />
       <Route
-        path="/profile/editar"
+        path="/perfil/editar"
         element={<ProtectedRoute element={<EditMyProfile />} />}
       />
       <Route
@@ -43,6 +34,10 @@ const AppRoutes = () => {
       <Route
         path="/reservas"
         element={<ProtectedRoute element={<Bookings />} />}
+      />
+      <Route
+        path="/"
+        element={<ProtectedRoute element={<UserHomeComponent />} />}
       />
       
       {/* Rutas de Administrador */}
@@ -66,4 +61,4 @@ const AppRoutes = () => {
   );
 };
 
-export default AppRoutes;
+export default PrivateRoutes;

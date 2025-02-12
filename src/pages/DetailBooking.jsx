@@ -51,7 +51,7 @@ const DetailBooking = () => {
 
   const booking = bookingState.bookingByConfirmation;
 
-  console.log(booking);
+  //console.log(booking);
 
   if (bookingState.loading || !booking)
     return (

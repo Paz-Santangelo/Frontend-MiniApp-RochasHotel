@@ -7,11 +7,21 @@ import {
   CardMedia,
   Typography,
   Grid,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const RoomsResult = ({ roomSearchResults }) => {
   const navigate = useNavigate();
+
+  if (!roomSearchResults || roomSearchResults.length === 0) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Grid container spacing={3}>

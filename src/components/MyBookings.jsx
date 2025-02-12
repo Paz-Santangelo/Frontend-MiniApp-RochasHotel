@@ -153,21 +153,22 @@ const MyBookings = () => {
                     >
                       Código de Confirmación: {booking.confirmationCode}
                     </Typography>
-                    <Typography variant="h6" sx={{ mt: 2 }}>
-                      Precio por noche: $
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                      <strong>Precio por noche:</strong> $
                       {booking.room.roomPrice.toLocaleString()}
                     </Typography>
                     <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold" }}>
                       Precio Total: ${totalPrice.toLocaleString()}
                     </Typography>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      sx={{ mt: 2 }}
-                      onClick={() => handleOpenDialog(booking)}
-                    >
-                      Cancelar Reserva
-                    </Button>
+                    <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => handleOpenDialog(booking)}
+                      >
+                        Cancelar Reserva
+                      </Button>
+                    </Box>
                   </CardContent>
                 </Card>
               </Grid>

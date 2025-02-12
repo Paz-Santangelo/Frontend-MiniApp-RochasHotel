@@ -80,8 +80,18 @@ const Sidenav = ({ userState, userDispatch }) => {
         }}
       >
         <MenuItem
-          routerLink={<Link to="/profile" />}
-          active={location.pathname === "/profile"}
+          routerLink={<Link to="/" />}
+          active={location.pathname === "/"}
+          icon={<AdminPanelSettingsIcon />}
+        >
+          <Typography variant="body2" sx={styles.link}>
+            Información
+          </Typography>
+        </MenuItem>
+
+        <MenuItem
+          routerLink={<Link to="/perfil" />}
+          active={location.pathname === "/perfil"}
           icon={<AdminPanelSettingsIcon />}
         >
           <Typography variant="body2" sx={styles.link}>
@@ -110,14 +120,14 @@ const Sidenav = ({ userState, userDispatch }) => {
             </Typography>
           </MenuItem>
         )}
-        
+
         <MenuItem
           routerLink={<Link to="/reservas" />}
           active={location.pathname === "/reservas"}
           icon={<CalendarMonthIcon />}
         >
           <Typography variant="body2" sx={styles.link}>
-          {userState.isAdmin ? "Reservas" : "Mis Reservas"}
+            {userState.isAdmin ? "Reservas" : "Mis Reservas"}
           </Typography>
         </MenuItem>
 
