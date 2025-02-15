@@ -17,7 +17,7 @@ export default class ApiService {
       `${this.BASE_URL}/auth/register`,
       registration
     );
-    return response.data;
+    return response;
   }
 
   static async loginUser(loginDetails) {
@@ -34,9 +34,10 @@ export default class ApiService {
     const response = await axios.get(`${this.BASE_URL}/users/all`, {
       headers: this.getHeader(),
     });
-    return response.data;
+    return response;
   }
 
+  /* Trae al usuario sin sus reservas, solo sus datos */
   static async getUserProfile() {
     const response = await axios.get(`${this.BASE_URL}/users/logged`, {
       headers: this.getHeader(),
@@ -44,7 +45,7 @@ export default class ApiService {
     return response.data;
   }
 
-  /* This is the  to get a single user */
+  /* Trae al usuario sin sus reservas, solo sus datos */
   static async getUser(userId) {
     const response = await axios.get(`${this.BASE_URL}/users/${userId}`, {
       headers: this.getHeader(),
@@ -52,7 +53,7 @@ export default class ApiService {
     return response.data;
   }
 
-  /* This is the  to get user bookings by the user id */
+  /* Trae al usuario con sus reservas */
   static async getUserBookings(userId) {
     const response = await axios.get(
       `${this.BASE_URL}/users/bookings/${userId}`,
@@ -60,10 +61,9 @@ export default class ApiService {
         headers: this.getHeader(),
       }
     );
-    return response.data;
+    return response;
   }
 
-  /* This is to delete a user */
   static async deleteUser(userId) {
     const response = await axios.delete(
       `${this.BASE_URL}/users/delete/${userId}`,
@@ -71,7 +71,21 @@ export default class ApiService {
         headers: this.getHeader(),
       }
     );
-    return response.data;
+    return response;
+  }
+
+  static async updateUser(userId, formData) {
+    const result = await axios.put(
+      `${this.BASE_URL}/users/update/${userId}`,
+      formData,
+      {
+        headers: {
+          ...this.getHeader(),
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return result;
   }
 
   /**AUTHENTICATION CHECKER */
@@ -83,7 +97,7 @@ export default class ApiService {
   static isAuthenticated() {
     const token = localStorage.getItem("token");
     //console.log(!!token);
-    
+
     return !!token;
   }
 
@@ -111,8 +125,9 @@ export default class ApiService {
   static async getAllRooms() {
     const result = await axios.get(`${this.BASE_URL}/rooms/all`);
     //console.log(result);
-    return result.data;
+    return result;
   }
+  
   static async getRoomTypes() {
     const response = await axios.get(`${this.BASE_URL}/rooms/types`);
     return response.data;
@@ -170,7 +185,7 @@ export default class ApiService {
 
   /* BOOKING */
   static async bookRoom(roomId, userId, booking) {
-    console.log("USER ID IS: " + userId);
+    //console.log("USER ID IS: " + userId);
 
     const response = await axios.post(
       `${this.BASE_URL}/bookings/create/${roomId}/${userId}`,
@@ -179,7 +194,7 @@ export default class ApiService {
         headers: this.getHeader(),
       }
     );
-    return response.data;
+    return response;
   }
 
   /* This  gets alll bokings from the database */
@@ -187,7 +202,7 @@ export default class ApiService {
     const result = await axios.get(`${this.BASE_URL}/bookings/all`, {
       headers: this.getHeader(),
     });
-    return result.data;
+    return result;
   }
 
   /* This  get booking by the cnfirmation code */
@@ -195,7 +210,7 @@ export default class ApiService {
     const result = await axios.get(
       `${this.BASE_URL}/bookings/confirmation/${bookingCode}`
     );
-    return result.data;
+    return result;
   }
 
   /* This is the  to cancel user booking */

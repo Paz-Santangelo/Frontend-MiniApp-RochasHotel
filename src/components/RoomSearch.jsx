@@ -67,21 +67,21 @@ const RoomSearch = ({ handleSearchResult, showAlert }) => {
         roomType
       );
 
-      if (response.status === 200 && response.data.length === 0) {
-        showAlert("No se encontraron habitaciones disponibles.", "warning");
-        return;
-      }
-
       handleSearchResult(response.data);
       showAlert("Habitaciones encontradas correctamente", "success");
-
     } catch (error) {
-      console.error("Error al buscar habitaciones:", error.message);
-      showAlert("Error al buscar habitaciones. Intente nuevamente.", "error");
+      const message =
+        error.response?.data?.error ||
+        error.response?.data ||
+        "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
+
+      showAlert(message, "error");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const isButtonDisabled = !startDate || !endDate || !roomType;
 
   return (
     <>
@@ -127,11 +127,10 @@ const RoomSearch = ({ handleSearchResult, showAlert }) => {
         variant="contained"
         color="primary"
         onClick={handleInternalSearch}
-        disabled={isLoading}
+        disabled={isLoading || isButtonDisabled}
       >
         {isLoading ? "Buscando..." : "Buscar"}
       </Button>
-      
     </>
   );
 };
@@ -143,7 +142,7 @@ const styles = {
     "@media (max-width: 600px)": {
       display: "flex",
       flexDirection: "column",
-      gap: 1,
+      gap: 3,
     },
   },
 };

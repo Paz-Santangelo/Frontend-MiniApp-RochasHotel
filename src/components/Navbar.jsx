@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
@@ -6,80 +8,84 @@ import {
   List,
   ListItem,
   Typography,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LogoHotel from "../assets/logo-hotel.png";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useReducer } from "react";
-import { initialUserState, userReducer } from "../reducers/userReducer";
 import { isAuthenticated, logout } from "../actions/userActions";
-import ApiService from "../services/ApiService";
-
-/* cuando el usuario está logueando se deben ocultar los links y que esté únicamente el botón de cerrar sesión */
+import { useProSidebar } from "react-pro-sidebar";
 
 const pages = [
-  {
-    name: "Nosotros",
-    url: "nosotros",
-  },
-  {
-    name: "Habitaciones",
-    url: "habitaciones",
-  },
-  {
-    name: "Contáctanos",
-    url: "contacto",
-  },
-  {
-    name: "Regístrate",
-    url: "registrate",
-  },
-  {
-    name: "",
-    url: "login",
-    icon: <PersonIcon />,
-  },
+  { name: "Nosotros", url: "nosotros" },
+  { name: "Habitaciones", url: "habitaciones" },
+  { name: "Contáctanos", url: "contacto" },
+  { name: "Regístrate", url: "registrate" },
 ];
 
-const Navbar = () => {
-  const [state, dispatch] = useReducer(userReducer, initialUserState);
+const Navbar = ({ userState, userDispatch }) => {
   const navigate = useNavigate();
-
-  const token = ApiService.isAuthenticated();
+  const { collapseSidebar, toggleSidebar, broken } = useProSidebar();
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const isMenuOpen = Boolean(menuAnchor);
 
   useEffect(() => {
-    isAuthenticated(dispatch);
-  }, [token, state.isAuthenticated]);
+    isAuthenticated(userDispatch);
+  }, [userState.isAuthenticated, userDispatch]);
 
+  const handleMenuOpen = (event) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
 
   const handleLogout = () => {
-    logout(dispatch);
+    logout(userDispatch);
     navigate("/");
   };
+
   return (
     <Box>
       <AppBar component="nav" sx={styles.appBar}>
         <Toolbar>
-          {/* Logo del hotel */}
+          {userState.isAuthenticated && (
+            <IconButton
+              onClick={() => (broken ? toggleSidebar() : collapseSidebar())}
+              color="secondary"
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+
           <Box
             component="img"
             src={LogoHotel}
-            sx={styles.logoHotel}
             alt="Logo del Hotel"
+            onClick={() => {
+              if (!userState.isAuthenticated) {
+                navigate("/");
+              }
+            }}
+            sx={{
+              ...styles.logoHotel,
+              cursor: !userState.isAuthenticated ? "pointer" : "default",
+            }}
           />
 
-          {/* Espaciador */}
           <Box sx={{ flexGrow: 1 }} />
 
-          {/* Lista de navegación */}
-          {!state.isAuthenticated ? (
+          {/* Menú para pantallas grandes */}
+          {!userState.isAuthenticated ? (
             <>
               <Box sx={styles.boxItemsNavigation}>
                 <List sx={styles.listItemsNavigation}>
                   {pages.map((page) => (
-                    <ListItem key={page.name} sx={styles.listItem}>
+                    <ListItem key={page.name}>
                       <NavLink
                         to={page.url}
                         style={({ isActive }) =>
@@ -87,20 +93,73 @@ const Navbar = () => {
                         }
                       >
                         <Typography variant="body1">{page.name}</Typography>
-                        {page.icon}
                       </NavLink>
                     </ListItem>
                   ))}
+
+                  <ListItem sx={styles.listItem}>
+                    <IconButton
+                      component={NavLink}
+                      to="/login"
+                      sx={{ color: "white" }}
+                      style={({ isActive }) =>
+                        isActive ? styles.navlinkActive : styles.navlink
+                      }
+                    >
+                      <PersonIcon />
+                    </IconButton>
+                  </ListItem>
                 </List>
               </Box>
 
               {/* Menú hamburguesa para pantallas pequeñas */}
               <IconButton
-                sx={{ mr: 2, display: { sm: "none" }, color: "white" }}
-                edge="start"
+                sx={{ display: { xs: "block", sm: "none" }, color: "white" }}
+                onClick={handleMenuOpen}
               >
                 <MenuIcon />
               </IconButton>
+
+              <Menu
+                anchorEl={menuAnchor}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+                sx={{ display: { xs: "block", sm: "none" } }}
+                MenuListProps={{
+                  sx: { bgcolor: "black" },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem
+                    key={page.name}
+                    onClick={handleMenuClose}
+                    sx={{ bgcolor: "black", color: "white" }}
+                  >
+                    <NavLink
+                      to={page.url}
+                      style={({ isActive }) =>
+                        isActive ? styles.navlinkActive : styles.navlink
+                      }
+                    >
+                      {page.name}
+                    </NavLink>
+                  </MenuItem>
+                ))}
+
+                <MenuItem
+                  onClick={handleMenuClose}
+                  sx={{ bgcolor: "black", color: "white" }}
+                >
+                  <NavLink
+                    to="/login"
+                    style={({ isActive }) =>
+                      isActive ? styles.navlinkActive : styles.navlink
+                    }
+                  >
+                    Login
+                  </NavLink>
+                </MenuItem>
+              </Menu>
             </>
           ) : (
             <IconButton
@@ -121,7 +180,7 @@ const Navbar = () => {
 const styles = {
   appBar: {
     bgcolor: "black",
-    position: "sticky",
+    position: "fixed",
   },
   logoHotel: {
     width: "3.5rem",
@@ -132,11 +191,6 @@ const styles = {
   },
   listItemsNavigation: {
     display: "flex",
-  },
-  listItems: {
-    display: "inline",
-    width: "auto",
-    padding: "0 1rem",
   },
   navlink: {
     textDecoration: "none",

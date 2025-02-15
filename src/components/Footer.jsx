@@ -39,13 +39,28 @@ const Footer = () => {
             Seguinos
           </Typography>
           <Box>
-            <IconButton href="https://facebook.com" sx={styles.iconsFooter}>
+            <IconButton
+              href="https://facebook.com"
+              sx={styles.iconsFooter}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Facebook />
             </IconButton>
-            <IconButton href="https://instagram.com" sx={styles.iconsFooter}>
+            <IconButton
+              href="https://instagram.com"
+              sx={styles.iconsFooter}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Instagram />
             </IconButton>
-            <IconButton href="https://twitter.com" sx={styles.iconsFooter}>
+            <IconButton
+              href="https://twitter.com"
+              sx={styles.iconsFooter}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Twitter />
             </IconButton>
           </Box>
@@ -54,7 +69,7 @@ const Footer = () => {
 
       <Box sx={styles.boxCopyright}>
         <Typography variant="body2">
-          © {new Date().getFullYear()} Nuestro Hotel. Todos los derechos
+          © {new Date().getFullYear()} Rochas Hotel. Todos los derechos
           reservados.
         </Typography>
       </Box>
@@ -67,8 +82,8 @@ const styles = {
   boxContainerFooter: {
     backgroundColor: "#333",
     color: "#fff",
-    padding: "2rem 1rem",
-    mt: "auto",
+    padding: "1rem 1rem",
+    mt: "4.4rem",
   },
   iconsFooter: {
     color: "#fff",
@@ -80,7 +95,7 @@ const styles = {
   boxCopyright: {
     textAlign: "center",
     borderTop: "1px solid rgba(255, 255, 255, 0.2)",
-    marginTop: "1.5rem",
+    marginTop: "1rem",
     paddingTop: "1rem",
   },
 };

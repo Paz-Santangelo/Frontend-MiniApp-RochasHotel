@@ -2,6 +2,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
@@ -9,21 +10,25 @@ import {
   Typography,
 } from "@mui/material";
 import RoomSearch from "../components/RoomSearch";
-import ApiService from "../services/ApiService";
 import { roomReducer, initialRoomState } from "../reducers/roomReducer";
 import {
   FETCH_ROOMS,
-  FETCH_ROOM_TYPES,
-  SET_SELECTED_ROOM_TYPE,
-  FILTER_ROOMS,
-  SET_CURRENT_PAGE,
-} from "../actions/RoomActions";
+  fetchRoomsAction,
+  fetchRoomTypesAction,
+  changeRoomTypeAction,
+  changePageAction,
+} from "../actions/roomActions";
 import NotificationAlert from "../components/NotificationAlert";
 import RoomsResult from "../components/RoomsResult";
 import CustomPagination from "../components/CustomPagination";
+import { useNavigate } from "react-router-dom";
+import { initialUserState, userReducer } from "../reducers/userReducer";
+import { isAdmin } from "../actions/userActions";
 
 const RoomsPage = () => {
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(roomReducer, initialRoomState);
+  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
   const [alertState, setAlertState] = useState({
     open: false,
     message: "",
@@ -31,7 +36,6 @@ const RoomsPage = () => {
   });
 
   const {
-    rooms,
     filteredRooms,
     roomTypes,
     selectedRoomType,
@@ -49,41 +53,20 @@ const RoomsPage = () => {
 
   useEffect(() => {
     const fetchRooms = async () => {
-      try {
-        const allRooms = await ApiService.getAllRooms();
-        dispatch({ type: FETCH_ROOMS, payload: allRooms });
-      } catch (error) {
-        console.error(
-          "Error al obtener todas las habitaciones:",
-          error.message
-        );
-        showAlert(
-          "Error al obtener todas las habitaciones, inténtelo nuevamente más tarde: ",
-          "error"
-        );
-      }
+      await fetchRoomsAction()(dispatch);
     };
-
     const fetchRoomTypes = async () => {
-      try {
-        const types = await ApiService.getRoomTypes();
-        dispatch({ type: FETCH_ROOM_TYPES, payload: types });
-      } catch (error) {
-        console.error(
-          "Error al traer los tipos de habitaciones, intentelo mas tarde:",
-          error.message
-        );
-      }
+      await fetchRoomTypesAction()(dispatch);
     };
-
     fetchRooms();
     fetchRoomTypes();
+
+    isAdmin(userDispatch);
   }, []);
 
   const handleRoomTypeChange = (e) => {
     const type = e.target.value;
-    dispatch({ type: SET_SELECTED_ROOM_TYPE, payload: type });
-    dispatch({ type: FILTER_ROOMS, payload: type });
+    changeRoomTypeAction(type)(dispatch);
   };
 
   const indexOfLastRoom = currentPage * roomsPerPage;
@@ -93,16 +76,27 @@ const RoomsPage = () => {
     Math.min(filteredRooms.length, indexOfLastRoom)
   );
 
-  const paginate = (pageNumber) =>
-    dispatch({ type: SET_CURRENT_PAGE, payload: pageNumber });
+  const paginate = (pageNumber) => changePageAction(pageNumber)(dispatch);
 
   return (
     <Box sx={styles.boxContainerRoomsPage}>
-      <Typography variant="h4" sx={{ mb: 2 }}>
-        Habitaciones
-      </Typography>
+      <Box sx={styles.boxContainerTitleAndCreateButton}>
+        <Typography variant="h4" sx={{ mb: 2 }}>
+          Habitaciones
+        </Typography>
+        {userState.isAdmin && (
+          <Button
+            variant="contained"
+            color="success"
+            size="small"
+            onClick={() => navigate("/admin/habitaciones/crear")}
+          >
+            Crear Habitación
+          </Button>
+        )}
+      </Box>
 
-      <FormControl required sx={{ minWidth: 300 }}>
+      <FormControl required sx={{ minWidth: 200 }}>
         <InputLabel id="demo-simple-select-required-label">
           Filtrar por tipo de habitación:
         </InputLabel>
@@ -126,7 +120,6 @@ const RoomsPage = () => {
         <RoomSearch
           handleSearchResult={(results) => {
             dispatch({ type: FETCH_ROOMS, payload: results });
-            showAlert("Búsqueda completada con éxito", "success");
           }}
           showAlert={showAlert}
         />
@@ -134,14 +127,12 @@ const RoomsPage = () => {
       <Box sx={{ margin: "2rem" }}>
         <RoomsResult roomSearchResults={currentRooms} />
       </Box>
-
       <NotificationAlert
         message={alertState.message}
         severity={alertState.severity}
         open={alertState.open}
         onClose={handleAlertClose}
       />
-
       <CustomPagination
         roomsPerPage={roomsPerPage}
         totalRooms={filteredRooms.length}
@@ -161,6 +152,16 @@ const styles = {
       display: "flex",
       flexDirection: "column",
       textAlign: "center",
+      gap: 3,
+    },
+  },
+  boxContainerTitleAndCreateButton: {
+    display: "flex",
+    justifyContent: "space-between",
+    "@media (max-width: 600px)": {
+      flexDirection: "column",
+      gap: 1,
+      mb: 2,
     },
   },
   boxContainerInputsSearch: {
@@ -173,7 +174,7 @@ const styles = {
     justifyContent: "center",
     "@media (max-width: 600px)": {
       flexDirection: "column",
-      gap: 1,
+      gap: 3,
       textAlign: "center",
     },
   },

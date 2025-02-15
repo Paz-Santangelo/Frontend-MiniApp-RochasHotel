@@ -10,7 +10,6 @@ const AboutHotel = () => {
         alignItems="center"
         justifyContent="center"
       >
-        {/* Texto a la derecha en pantallas grandes, arriba en pantallas chicas */}
         <Grid size={8}>
           <Typography variant="h4" gutterBottom>
             Un Lugar Único en las Sierras de Córdoba
@@ -31,7 +30,6 @@ const AboutHotel = () => {
             naturaleza!
           </Typography>
         </Grid>
-        {/* Imagen a la izquierda en pantallas grandes, abajo en pantallas chicas */}
         <Grid size={8}>
           <Box
             component="img"
