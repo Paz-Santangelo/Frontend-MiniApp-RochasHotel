@@ -70,7 +70,6 @@ const RoomSearch = ({ handleSearchResult, showAlert }) => {
       handleSearchResult(response.data);
       showAlert("Habitaciones encontradas correctamente", "success");
     } catch (error) {
-      //console.error("Error al buscar habitaciones:", error.message);
       const message =
         error.response?.data?.error ||
         error.response?.data ||

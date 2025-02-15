@@ -102,7 +102,7 @@ export const updateRoomAction = (roomId, formData) => async (dispatch) => {
 
   try {
     const result = await ApiService.updateRoom(roomId, formData);
-    //console.log("Room updated:", result.data);
+    //console.log("Habitacion actualizada:", result.data);
 
     dispatch({ type: UPDATE_ROOM_SUCCESS, payload: result.data });
   } catch (error) {

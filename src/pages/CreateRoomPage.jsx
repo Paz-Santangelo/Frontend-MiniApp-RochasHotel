@@ -47,7 +47,6 @@ const CreateRoomPage = () => {
     formData.append("roomDescription", roomData.roomDescription);
     formData.append("roomPrice", roomData.roomPrice);
 
-    // Agregar nuevas imágenes
     roomData.files.forEach((file) => {
       formData.append("files", file);
     });
@@ -55,11 +54,6 @@ const CreateRoomPage = () => {
     imagesToDelete.forEach((image) => {
       formData.append("imagesToDelete", image);
     });
-
-    /* console.log("Enviando datos:");
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}:`, value);
-    } */
 
     addRoomAction(formData)(roomDispatch);
   };

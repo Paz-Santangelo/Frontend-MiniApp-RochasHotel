@@ -37,7 +37,7 @@ const ContactUs = () => {
                   <Email />
                 </IconButton>
                 <Typography variant="body1">
-                  rochas_hotel@contact.com
+                  rochas_hotel@contacto.com
                 </Typography>
               </Box>
 

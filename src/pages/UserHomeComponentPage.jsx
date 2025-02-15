@@ -96,19 +96,19 @@ const UserHomeComponentPage = () => {
                 <ListItem>
                   <ListItemText
                     primary="WhatsApp"
-                    secondary="+54 9 1122334455"
+                    secondary="+54 354822334455"
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Teléfono"
-                    secondary="+54 11 44556677"
+                    secondary="+54 354844556677"
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
                     primary="Email"
-                    secondary="contacto@hotelrochas.com"
+                    secondary="rochas_hotel@contacto.com"
                   />
                 </ListItem>
               </List>

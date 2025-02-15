@@ -34,7 +34,6 @@ const initialState = {
 export const roomReducer = (state, action) => {
   switch (action.type) {
     case FETCH_ROOMS:
-      //console.log("Datos recibidos para FETCH_ROOMS:", action.payload);
       return {
         ...state,
         rooms: action.payload,

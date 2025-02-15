@@ -26,8 +26,6 @@ const EditMyProfilePage = () => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [errorPassword, setErrorPassword] = useState("");
 
-  //console.log(user);
-
   const [formData, setFormData] = useState({
     image: user?.imageUser.urlImage || "/default-profile.png",
     name: user?.name || "",
@@ -88,7 +86,6 @@ const EditMyProfilePage = () => {
     }
   };
 
-  // Convertir una URL de imagen en un archivo File
   const urlToFile = async (url) => {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -113,12 +110,7 @@ const EditMyProfilePage = () => {
     if (formData.password) updatedData.append("password", formData.password);
     if (formData.imageFile) updatedData.append("image", formData.imageFile);
 
-    //console.log("Datos a enviar:", Object.fromEntries(updatedData));
-
     updateUserAction(user.id, updatedData)(userDispatch);
-
-    //Mostrar alerta de exito o error
-    //logout
   };
 
   return (

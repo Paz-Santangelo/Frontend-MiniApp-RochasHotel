@@ -14,7 +14,7 @@ const Hero = () => {
           ¡Bienvenidos!
         </Typography>
         <Typography variant="subtitle1" sx={styles.typographySubtitle}>
-          Descansa, conecta y respira en Rocha Hotel, ubicado en el corazón de
+          Descansa, conecta y respira en Rochas Hotel, ubicado en el corazón de
           las sierras.
         </Typography>
       </Box>

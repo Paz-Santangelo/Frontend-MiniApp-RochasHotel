@@ -29,8 +29,6 @@ const MyBookings = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
 
-  //console.log(userState);
-
   useEffect(() => {
     getUserData(userDispatch);
   }, []);
@@ -76,7 +74,6 @@ const MyBookings = () => {
 
   const handleDeleteBooking = async () => {
     if (selectedBooking) {
-      //console.log("Numero de reserva a eliminar " + selectedBooking.id);
       await deleteBookingAction(selectedBooking.id)(bookingDispatch);
       getUserBookingsAction(userState.user.id)(userDispatch);
       handleCloseDialog();

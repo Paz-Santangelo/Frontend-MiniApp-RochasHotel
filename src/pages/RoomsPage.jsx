@@ -35,7 +35,6 @@ const RoomsPage = () => {
     severity: "success",
   });
 
-  //console.log(userState);
   const {
     filteredRooms,
     roomTypes,

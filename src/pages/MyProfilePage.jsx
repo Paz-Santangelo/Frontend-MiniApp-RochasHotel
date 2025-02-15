@@ -19,7 +19,6 @@ const MyProfilePage = () => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  //console.log(userState);
   useEffect(() => {
     isAuthenticated(userDispatch);
     isAdmin(userDispatch);
@@ -52,7 +51,6 @@ const MyProfilePage = () => {
   };
 
   const handleDeleteUser = async () => {
-    //console.log("Eliminar usuario " + userState.user?.id);
     await deleteUserAction(userState.user?.id)(userDispatch);
     setOpenDialog(false);
   };

@@ -51,8 +51,6 @@ const DetailBookingPage = () => {
 
   const booking = bookingState.bookingByConfirmation;
 
-  //console.log(booking);
-
   if (bookingState.loading || !booking)
     return (
       <Box
@@ -83,7 +81,6 @@ const DetailBookingPage = () => {
 
   const handleDeleteBooking = async () => {
     if (selectedBooking) {
-      //console.log("Numero de reserva a eliminar " + selectedBooking.id);
       await deleteBookingAction(selectedBooking.id)(bookingDispatch);
       handleCloseDialog();
     }

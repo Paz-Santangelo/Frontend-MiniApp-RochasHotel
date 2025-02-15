@@ -16,7 +16,6 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  //console.log(state);
   const validateInputs = () => {
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     const passwordValid = password.trim().length > 0;

@@ -11,8 +11,6 @@ const RegisterPage = () => {
 
   const navigate = useNavigate();
 
-  //console.log(state);
-
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
@@ -33,7 +31,6 @@ const RegisterPage = () => {
     setErrors({ ...errors, [name]: false });
   };
 
-  // Validar los campos
   const validateFields = () => {
     const newErrors = {
       email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formValues.email),

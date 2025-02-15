@@ -24,7 +24,6 @@ import {
 import NotificationAlert from "../components/NotificationAlert";
 import MessageDialog from "../components/MessageDialog";
 
-
 const columns = [
   { id: "imageUser", label: "Imagen", minWidth: 100, align: "center" },
   { id: "name", label: "Nombre", minWidth: 100, align: "center" },
@@ -85,19 +84,10 @@ const AllUsersPage = () => {
   };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-        textAlign: "center",
-      }}
-    >
+    <Container sx={styles.containerAllUsers}>
       <Box sx={{ marginBottom: "2rem" }}>
         <Typography variant="h4" gutterBottom>
-          Todos los Usuarios Registrados
+          Usuarios Registrados
         </Typography>
         <Typography variant="body1">
           Antes de eliminar cualquier usuario, debe tener en cuenta que, en caso
@@ -125,9 +115,7 @@ const AllUsersPage = () => {
               {userState.loading ? (
                 <TableRow>
                   <TableCell colSpan={columns.length} align="center">
-                    <Box
-                      sx={{ display: "flex", justifyContent: "center", py: 5 }}
-                    >
+                    <Box sx={styles.boxCircularProgress}>
                       <CircularProgress />
                     </Box>
                   </TableCell>
@@ -145,7 +133,7 @@ const AllUsersPage = () => {
                               <Avatar
                                 src={row.imageUser?.urlImage}
                                 alt="Avatar"
-                                sx={{ width: 40, height: 40, margin: "auto" }}
+                                sx={styles.avatar}
                               />
                             ) : column.id === "action" ? (
                               <Button
@@ -182,16 +170,7 @@ const AllUsersPage = () => {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{
-            display: "flex",
-            justifyContent: "end",
-            "& .css-11cfq65-MuiTablePagination-displayedRows": {
-              margin: 0,
-            },
-            "& .css-s09cke-MuiTablePagination-selectLabel": {
-              margin: 0,
-            },
-          }}
+          sx={styles.tablePagination}
         />
       </Paper>
 
@@ -215,6 +194,38 @@ const AllUsersPage = () => {
       </MessageDialog>
     </Container>
   );
+};
+
+/** @type {import("@mui/material").SxProps}  */
+const styles = {
+  containerAllUsers: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+    textAlign: "center",
+  },
+  boxCircularProgress: {
+    display: "flex",
+    justifyContent: "center",
+    py: 5,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    margin: "auto",
+  },
+  tablePagination: {
+    display: "flex",
+    justifyContent: "end",
+    "& .css-11cfq65-MuiTablePagination-displayedRows": {
+      margin: 0,
+    },
+    "& .css-s09cke-MuiTablePagination-selectLabel": {
+      margin: 0,
+    },
+  },
 };
 
 export default AllUsersPage;

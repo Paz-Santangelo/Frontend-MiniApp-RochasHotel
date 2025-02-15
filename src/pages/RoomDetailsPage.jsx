@@ -123,7 +123,6 @@ const RoomDetailsPage = () => {
     const totalGuests = adultsQuantity + childrenQuantity;
     const roomPricePerNight = selectedRoom.roomPrice;
     const totalPrice = totalDays * roomPricePerNight;
-    //console.log("Precio total: ", totalPrice);
 
     setContentMessageDialog({
       roomType: selectedRoom.roomType,
@@ -144,9 +143,6 @@ const RoomDetailsPage = () => {
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
 
-    //console.log("Fecha de entrada original: ", startDate);
-    //console.log("Fecha de salida original: ", endDate);
-
     const formattedCheckInDate = new Date(
       startDate.getTime() - startDate.getTimezoneOffset() * 60000
     )
@@ -159,19 +155,12 @@ const RoomDetailsPage = () => {
       .toISOString()
       .split("T")[0];
 
-    //console.log("Fecha de entrada formateada: ", startDate);
-    //console.log("Fecha de salida formateada: ", endDate);
-
     const bookingData = {
       checkInDate: formattedCheckInDate,
       checkOutDate: formattedCheckOutDate,
       adultsQuantity: adultsQuantity,
       childrenQuantity: childrenQuantity,
     };
-
-    //console.log("ID de la habitación: ", roomId);
-    //console.log("ID del usuario: ", userState.user.id);
-    //console.log("Datos de la reserva: ", bookingData);
 
     bookRoom(roomId, userState.user.id, bookingData)(bookingDispatch);
   };
@@ -215,7 +204,6 @@ const RoomDetailsPage = () => {
   };
 
   const handleDeleteRoom = async () => {
-    //console.log("Eliminar habitación:", roomId);
     await deleteRoomAction(roomId)(roomDispatch);
   };
 
