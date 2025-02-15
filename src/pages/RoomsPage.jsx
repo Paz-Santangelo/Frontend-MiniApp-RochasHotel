@@ -90,7 +90,7 @@ const RoomsPage = () => {
             variant="contained"
             color="success"
             size="small"
-            onClick={() => navigate("/habitaciones/crear")}
+            onClick={() => navigate("/admin/habitaciones/crear")}
           >
             Crear Habitación
           </Button>

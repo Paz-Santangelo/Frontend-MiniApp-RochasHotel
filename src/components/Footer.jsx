@@ -82,7 +82,7 @@ const styles = {
   boxContainerFooter: {
     backgroundColor: "#333",
     color: "#fff",
-    padding: "1.5rem 1rem",
+    padding: "1rem 1rem",
     mt: "4.4rem",
   },
   iconsFooter: {
@@ -95,7 +95,7 @@ const styles = {
   boxCopyright: {
     textAlign: "center",
     borderTop: "1px solid rgba(255, 255, 255, 0.2)",
-    marginTop: "1.5rem",
+    marginTop: "1rem",
     paddingTop: "1rem",
   },
 };

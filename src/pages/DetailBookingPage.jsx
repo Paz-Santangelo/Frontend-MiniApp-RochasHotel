@@ -22,7 +22,7 @@ import {
 import NotificationAlert from "../components/NotificationAlert";
 import MessageDialog from "../components/MessageDialog";
 
-const DetailBooking = () => {
+const DetailBookingPage = () => {
   const { confirmationCode } = useParams();
   const [bookingState, bookingDispatch] = useReducer(
     bookingReducer,
@@ -150,7 +150,7 @@ const DetailBooking = () => {
           <Typography variant="h6">{booking.room.roomType}</Typography>
           <Typography>{booking.room.roomDescription}</Typography>
           <Typography variant="h6" color="primary">
-            💰 ${booking.room.roomPrice} / noche
+            💰 ${booking.room.roomPrice.toLocaleString()} / noche
           </Typography>
         </CardContent>
       </Card>
@@ -166,20 +166,20 @@ const DetailBooking = () => {
         <Button
           sx={{ width: "8rem" }}
           variant="contained"
-          color="primary"
-          fullWidth
-          onClick={() => navigate(-1)}
-        >
-          Volver
-        </Button>
-        <Button
-          sx={{ width: "8rem" }}
-          variant="contained"
           color="error"
           fullWidth
           onClick={() => handleOpenDialog(booking)}
         >
           Eliminar
+        </Button>
+        <Button
+          sx={{ width: "8rem" }}
+          variant="contained"
+          color="primary"
+          fullWidth
+          onClick={() => navigate(-1)}
+        >
+          Volver
         </Button>
       </Box>
 
@@ -247,5 +247,4 @@ const DetailBooking = () => {
   );
 };
 
-export default DetailBooking;
-
+export default DetailBookingPage;

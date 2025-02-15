@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { addRoomAction } from "../actions/roomActions";
 import NotificationAlert from "../components/NotificationAlert";
 
-const CreateRoom = () => {
+const CreateRoomPage = () => {
   const [roomState, roomDispatch] = useReducer(roomReducer, initialRoomState);
   const [roomData, setRoomData] = useState({
     files: [],
@@ -204,4 +204,4 @@ const styles = {
   },
 };
 
-export default CreateRoom;
+export default CreateRoomPage;

@@ -84,16 +84,13 @@ const MyBookings = () => {
   };
 
   return (
-    <Box sx={{ padding: 4, height: "auto" }}>
+    <Box sx={styles.boxContainerMyBookings}>
       <Typography variant="h4" gutterBottom>
         Mis Reservas
       </Typography>
 
       {userState.userBookings?.bookings?.length === 0 ? (
-        <Typography
-          variant="h6"
-          sx={{ textAlign: "center", mt: 4, color: "text.secondary" }}
-        >
+        <Typography variant="h5" sx={styles.unReservedTitle}>
           No tienes ninguna reserva.
         </Typography>
       ) : (
@@ -114,13 +111,7 @@ const MyBookings = () => {
                 key={booking.id}
                 sx={{ height: "100%" }}
               >
-                <Card
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "100%",
-                  }}
-                >
+                <Card sx={styles.card}>
                   {booking.room.imagesRoom.length > 0 && (
                     <CardMedia
                       component="img"
@@ -137,10 +128,16 @@ const MyBookings = () => {
                       {booking.room.roomDescription}
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 1 }}>
-                      <strong>Entrada:</strong> {booking.checkInDate}
+                      <strong>Entrada:</strong>{" "}
+                      {new Date(booking.checkInDate).toLocaleDateString(
+                        "es-ES"
+                      )}
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 1 }}>
-                      <strong>Salida:</strong> {booking.checkOutDate}
+                      <strong>Salida:</strong>{" "}
+                      {new Date(booking.checkOutDate).toLocaleDateString(
+                        "es-ES"
+                      )}
                     </Typography>
                     <Typography variant="body1" sx={{ mt: 1 }}>
                       <strong>Huéspedes:</strong> {booking.totalGuests}{" "}
@@ -157,10 +154,14 @@ const MyBookings = () => {
                       <strong>Precio por noche:</strong> $
                       {booking.room.roomPrice.toLocaleString()}
                     </Typography>
-                    <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold" }}>
+                    <Typography
+                      variant="h6"
+                      color="primary"
+                      sx={{ mt: 2, fontWeight: "bold" }}
+                    >
                       Precio Total: ${totalPrice.toLocaleString()}
                     </Typography>
-                    <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+                    <Box sx={styles.boxButtonCancel}>
                       <Button
                         variant="contained"
                         color="error"
@@ -240,6 +241,26 @@ const MyBookings = () => {
       />
     </Box>
   );
+};
+
+/** @type {import("@mui/material").SxProps}  */
+const styles = {
+  boxContainerMyBookings: { padding: 4, height: "auto" },
+  unReservedTitle: {
+    textAlign: "center",
+    mt: 4,
+    color: "text.secondary",
+  },
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+  },
+  boxButtonCancel: {
+    display: "flex",
+    justifyContent: "flex-end",
+    mt: 2,
+  },
 };
 
 export default MyBookings;

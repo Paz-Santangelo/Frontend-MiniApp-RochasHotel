@@ -2,7 +2,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useReducer, useState } from "react";
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import NotificationAlert from "../components/NotificationAlert";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../actions/userActions";
 
 const LoginPage = () => {
@@ -99,6 +99,13 @@ const LoginPage = () => {
         >
           {state.loading ? "Cargando..." : "Iniciar sesión"}
         </Button>
+
+        <Typography variant="body2" sx={{ marginTop: "1rem" }}>
+          ¿No tienes cuenta?{" "}
+          <Link to="/registrate" sx={{ fontWeight: "bold" }}>
+            Regístrate aquí
+          </Link>
+        </Typography>
       </Box>
 
       {/* Mostrar notificación */}

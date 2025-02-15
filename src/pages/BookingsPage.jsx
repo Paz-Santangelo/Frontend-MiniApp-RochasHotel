@@ -5,7 +5,7 @@ import AllBookings from "../components/AllBookings";
 import MyBookings from "../components/MyBookings";
 
 
-const Bookings = () => {
+const BookingsPage = () => {
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
 
   useEffect(() => {
@@ -16,4 +16,4 @@ const Bookings = () => {
   return <>{userState.isAdmin ? <AllBookings /> : <MyBookings />}</>;
 };
 
-export default Bookings;
+export default BookingsPage;

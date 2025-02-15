@@ -26,13 +26,13 @@ const testimonials = [
 ];
 
 const Testimonials = () => (
-  <Box sx={{ margin: "2rem" }}>
+  <Box sx={{ margin: "4rem" }}>
     <Box>
       <Typography variant="h4" gutterBottom>
         Testimonios de nuestros clientes
       </Typography>
     </Box>
-    <Carousel style={{ padding: "0 2rem" }}>
+    <Carousel style={{ padding: "0 2rem"}}>
       {testimonials.map((testimonial, index) => (
         <Carousel.Item key={index}>
           <Box sx={styles.boxCardCarouselItem}>

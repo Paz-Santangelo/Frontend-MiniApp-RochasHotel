@@ -34,7 +34,7 @@ export default class ApiService {
     const response = await axios.get(`${this.BASE_URL}/users/all`, {
       headers: this.getHeader(),
     });
-    return response.data;
+    return response;
   }
 
   /* Trae al usuario sin sus reservas, solo sus datos */

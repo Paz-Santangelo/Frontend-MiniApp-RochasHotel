@@ -48,7 +48,7 @@ const RoomsResult = ({ roomSearchResults }) => {
                 {room.roomDescription}
               </Typography>
               <Typography variant="h6" sx={{ mt: 1 }}>
-                Precio: ${room.roomPrice}
+                Precio: ${room.roomPrice.toLocaleString()}
               </Typography>
             </CardContent>
             <CardActions sx={{ justifyContent: "end", p: 0 }}>

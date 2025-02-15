@@ -72,10 +72,10 @@ const AllBookings = () => {
           Código: {booking.confirmationCode}
         </Typography>
         <Typography variant="body1">
-          <strong>Fecha de entrada:</strong> {booking.checkInDate}
+          <strong>Fecha de entrada:</strong> {new Date(booking.checkInDate).toLocaleDateString("es-ES")}
         </Typography>
         <Typography variant="body1">
-          <strong>Fecha de salida:</strong> {booking.checkOutDate}
+          <strong>Fecha de salida:</strong> {new Date(booking.checkOutDate).toLocaleDateString("es-ES")}
         </Typography>
         <Typography variant="body1">
           <strong>Adultos:</strong> {booking.adultsQuantity}

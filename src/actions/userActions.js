@@ -19,6 +19,9 @@ export const USER_DELETE_SUCCESS = "USER_DELETE_SUCCESS";
 export const USER_DELETE_FAILURE = "USER_DELETE_FAILURE";
 export const USER_BOOKINGS_SUCCESS = "USER_BOOKINGS_SUCCESS";
 export const USER_BOOKINGS_FAILURE = "USER_BOOKINGS_FAILURE";
+export const ALL_USERS = "ALL_USERS";
+export const ALL_USERS_SUCCESS = "ALL_USERS_SUCCESS";
+export const ALL_USERS_FAILURE = "ALL_USERS_FAILURE";
 
 export const login = async (dispatch, loginDetails) => {
   dispatch({ type: USER_LOGIN_REQUEST });
@@ -136,5 +139,24 @@ export const getUserBookingsAction = (userId) => async (dispatch) => {
       "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
 
     dispatch({ type: USER_BOOKINGS_FAILURE, payload: message });
+  }
+};
+
+export const getAllUsersAction = () => async (dispatch) => {
+  dispatch({ type: ALL_USERS });
+
+  try {
+    const response = await ApiService.getAllUsers();
+
+    //console.log(response.data)
+
+    dispatch({ type: ALL_USERS_SUCCESS, payload: response.data });
+  } catch (error) {
+    const message =
+      error.response?.data?.error ||
+      error.response?.data ||
+      "Error de conexión con el servidor. Inténtelo nuevamente más tarde.";
+
+    dispatch({ type: ALL_USERS_FAILURE, payload: message });
   }
 };

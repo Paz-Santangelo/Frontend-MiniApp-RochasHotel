@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import MessageDialog from "../components/MessageDialog";
 import NotificationAlert from "../components/NotificationAlert";
 
-const MyProfile = () => {
+const MyProfilePage = () => {
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
   const navigate = useNavigate();
   const [alertOpen, setAlertOpen] = useState(false);
@@ -197,4 +197,4 @@ const styles = {
   },
 };
 
-export default MyProfile;
+export default MyProfilePage;

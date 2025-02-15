@@ -47,7 +47,7 @@ export const deleteBookingAction = (bookingId) => async (dispatch) => {
   try {
     const response = await ApiService.cancelBooking(bookingId);
 
-    console.log(response);
+    //console.log(response);
     dispatch({ type: BOOKING_DELETE_SUCCESS, payload: response });
   } catch (error) {
     const message =

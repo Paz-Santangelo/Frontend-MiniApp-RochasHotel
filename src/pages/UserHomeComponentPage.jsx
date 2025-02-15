@@ -12,7 +12,7 @@ import {
 import { initialUserState, userReducer } from "../reducers/userReducer";
 import { isAdmin, isUser } from "../actions/userActions";
 
-const UserHomeComponent = () => {
+const UserHomeComponentPage = () => {
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
 
   //console.log(userState);
@@ -22,14 +22,8 @@ const UserHomeComponent = () => {
   }, [userState.isAdmin, userState.isUser, userDispatch]);
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="calc(100vh - 71.58px)"
-      padding="2rem"
-    >
-      <Card sx={{ maxWidth: 600, width: "90%", boxShadow: 3, borderRadius: 2 }}>
+    <Box sx={styles.boxContainerUserHome}>
+      <Card sx={styles.card}>
         <CardContent>
           <Typography variant="h5" gutterBottom align="center">
             {userState.isAdmin ? "Panel de Administración" : `Bienvenido/a`}
@@ -83,7 +77,7 @@ const UserHomeComponent = () => {
                 <ListItem>
                   <ListItemText
                     primary="Buscar reserva"
-                    secondary="Encuentra una reserva con su código."
+                    secondary="Encuentra una reserva con su código de confirmación."
                   />
                 </ListItem>
                 <ListItem>
@@ -126,4 +120,21 @@ const UserHomeComponent = () => {
   );
 };
 
-export default UserHomeComponent;
+/** @type {import("@mui/material").SxProps}  */
+const styles = {
+  boxContainerUserHome: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "calc(100vh - 71.58px)",
+    padding: "2rem",
+  },
+  card: {
+    maxWidth: 600,
+    width: "90%",
+    boxShadow: 3,
+    borderRadius: 2,
+  },
+};
+
+export default UserHomeComponentPage;

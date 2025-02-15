@@ -248,7 +248,7 @@ const RoomDetailsPage = () => {
               {selectedRoom.roomDescription}
             </Typography>
             <Typography variant="h6" sx={styles.price}>
-              Precio: ${selectedRoom.roomPrice}
+              Precio: ${selectedRoom.roomPrice.toLocaleString()}
             </Typography>
             <Box sx={styles.boxButtons}>
             <Button
@@ -365,7 +365,7 @@ const RoomDetailsPage = () => {
               <Box>
                 <Typography>🏨 {selectedRoom.roomType}</Typography>
                 <Typography>📄 {selectedRoom.roomDescription}</Typography>
-                <Typography>💰 Precio: ${selectedRoom.roomPrice}</Typography>
+                <Typography>💰 Precio: ${selectedRoom.roomPrice.toLocaleString()}</Typography>
               </Box>
             ) : (
               <Box>

@@ -4,13 +4,13 @@ import RoomsPage from "../pages/RoomsPage";
 import { AdminRoute, ProtectedRoute } from "../services/guard";
 import EditRoomPage from "../pages/EditRoomPage";
 import FindBookingPage from "../pages/FindBookingPage";
-import Bookings from "../pages/Bookings";
-import MyProfile from "../pages/MyProfile";
-import AllUsers from "../components/AllUsers";
-import CreateRoom from "../pages/CreateRoom";
-import EditMyProfile from "../pages/EditMyProfile";
-import DetailBooking from "../pages/DetailBooking";
-import UserHomeComponent from "../pages/UserHomeComponent";
+import AllUsersPage from "../pages/AllUsersPage";
+import MyProfilePage from "../pages/MyProfilePage";
+import EditMyProfilePage from "../pages/EditMyProfilePage";
+import BookingsPage from "../pages/BookingsPage";
+import UserHomeComponentPage from "../pages/UserHomeComponentPage";
+import CreateRoomPage from "../pages/CreateRoomPage";
+import DetailBookingPage from "../pages/DetailBookingPage";
 
 const PrivateRoutes = () => {
   return (
@@ -21,11 +21,11 @@ const PrivateRoutes = () => {
       {/* Rutas Protegidas */}
       <Route
         path="/perfil"
-        element={<ProtectedRoute element={<MyProfile />} />}
+        element={<ProtectedRoute element={<MyProfilePage />} />}
       />
       <Route
         path="/perfil/editar"
-        element={<ProtectedRoute element={<EditMyProfile />} />}
+        element={<ProtectedRoute element={<EditMyProfilePage />} />}
       />
       <Route
         path="/reserva/buscar"
@@ -33,11 +33,11 @@ const PrivateRoutes = () => {
       />
       <Route
         path="/reservas"
-        element={<ProtectedRoute element={<Bookings />} />}
+        element={<ProtectedRoute element={<BookingsPage />} />}
       />
       <Route
         path="/"
-        element={<ProtectedRoute element={<UserHomeComponent />} />}
+        element={<ProtectedRoute element={<UserHomeComponentPage />} />}
       />
       
       {/* Rutas de Administrador */}
@@ -46,16 +46,16 @@ const PrivateRoutes = () => {
         element={<AdminRoute element={<EditRoomPage />} />}
       />
       <Route
-        path="/habitaciones/crear"
-        element={<AdminRoute element={<CreateRoom />} />}
+        path="/admin/habitaciones/crear"
+        element={<AdminRoute element={<CreateRoomPage />} />}
       />
       <Route
         path="/admin/reservas/:confirmationCode"
-        element={<AdminRoute element={<DetailBooking />} />}
+        element={<AdminRoute element={<DetailBookingPage />} />}
       />
       <Route
-        path="/usuarios"
-        element={<AdminRoute element={<AllUsers />} />}
+        path="/admin/usuarios"
+        element={<AdminRoute element={<AllUsersPage />} />}
       />
     </Routes>
   );

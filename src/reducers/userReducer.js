@@ -18,6 +18,9 @@ import {
   USER_DELETE_FAILURE,
   USER_BOOKINGS_SUCCESS,
   USER_BOOKINGS_FAILURE,
+  ALL_USERS,
+  ALL_USERS_SUCCESS,
+  ALL_USERS_FAILURE,
 } from "../actions/userActions";
 
 const initialState = {
@@ -30,6 +33,7 @@ const initialState = {
   isUser: false,
   registrationSuccess: false,
   userBookings: null,
+  allUsers: [],
 };
 
 export const userReducer = (state, action) => {
@@ -136,6 +140,27 @@ export const userReducer = (state, action) => {
         loading: false,
         error: action.payload,
         userBookings: null,
+      };
+    case ALL_USERS:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+        allUsers: null,
+      };
+    case ALL_USERS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        allUsers: action.payload,
+      };
+    case ALL_USERS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        allUsers: null,
       };
     default:
       return state;

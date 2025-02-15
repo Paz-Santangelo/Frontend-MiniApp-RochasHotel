@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
@@ -7,52 +8,47 @@ import {
   List,
   ListItem,
   Typography,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LogoHotel from "../assets/logo-hotel.png";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { isAuthenticated, logout } from "../actions/userActions";
 import { useProSidebar } from "react-pro-sidebar";
 
 const pages = [
-  {
-    name: "Nosotros",
-    url: "nosotros",
-  },
-  {
-    name: "Habitaciones",
-    url: "habitaciones",
-  },
-  {
-    name: "Contáctanos",
-    url: "contacto",
-  },
-  {
-    name: "Regístrate",
-    url: "registrate",
-  },
-  {
-    name: "",
-    url: "login",
-    icon: <PersonIcon />,
-  },
+  { name: "Nosotros", url: "nosotros" },
+  { name: "Habitaciones", url: "habitaciones" },
+  { name: "Contáctanos", url: "contacto" },
+  { name: "Regístrate", url: "registrate" },
 ];
 
 const Navbar = ({ userState, userDispatch }) => {
   const navigate = useNavigate();
   const { collapseSidebar, toggleSidebar, broken } = useProSidebar();
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const isMenuOpen = Boolean(menuAnchor);
 
   useEffect(() => {
     isAuthenticated(userDispatch);
   }, [userState.isAuthenticated, userDispatch]);
 
+  const handleMenuOpen = (event) => {
+    setMenuAnchor(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+  };
+
   const handleLogout = () => {
     logout(userDispatch);
     navigate("/");
   };
+
   return (
     <Box>
       <AppBar component="nav" sx={styles.appBar}>
@@ -65,6 +61,7 @@ const Navbar = ({ userState, userDispatch }) => {
               <MenuIcon />
             </IconButton>
           )}
+
           <Box
             component="img"
             src={LogoHotel}
@@ -82,12 +79,13 @@ const Navbar = ({ userState, userDispatch }) => {
 
           <Box sx={{ flexGrow: 1 }} />
 
+          {/* Menú para pantallas grandes */}
           {!userState.isAuthenticated ? (
             <>
               <Box sx={styles.boxItemsNavigation}>
                 <List sx={styles.listItemsNavigation}>
                   {pages.map((page) => (
-                    <ListItem key={page.name} sx={styles.listItem}>
+                    <ListItem key={page.name}>
                       <NavLink
                         to={page.url}
                         style={({ isActive }) =>
@@ -95,20 +93,73 @@ const Navbar = ({ userState, userDispatch }) => {
                         }
                       >
                         <Typography variant="body1">{page.name}</Typography>
-                        {page.icon}
                       </NavLink>
                     </ListItem>
                   ))}
+
+                  <ListItem sx={styles.listItem}>
+                    <IconButton
+                      component={NavLink}
+                      to="/login"
+                      sx={{ color: "white" }}
+                      style={({ isActive }) =>
+                        isActive ? styles.navlinkActive : styles.navlink
+                      }
+                    >
+                      <PersonIcon />
+                    </IconButton>
+                  </ListItem>
                 </List>
               </Box>
 
               {/* Menú hamburguesa para pantallas pequeñas */}
               <IconButton
-                sx={{ mr: 2, display: { sm: "none" }, color: "white" }}
-                edge="start"
+                sx={{ display: { xs: "block", sm: "none" }, color: "white" }}
+                onClick={handleMenuOpen}
               >
                 <MenuIcon />
               </IconButton>
+
+              <Menu
+                anchorEl={menuAnchor}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+                sx={{ display: { xs: "block", sm: "none" } }}
+                MenuListProps={{
+                  sx: { bgcolor: "black" },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem
+                    key={page.name}
+                    onClick={handleMenuClose}
+                    sx={{ bgcolor: "black", color: "white" }}
+                  >
+                    <NavLink
+                      to={page.url}
+                      style={({ isActive }) =>
+                        isActive ? styles.navlinkActive : styles.navlink
+                      }
+                    >
+                      {page.name}
+                    </NavLink>
+                  </MenuItem>
+                ))}
+
+                <MenuItem
+                  onClick={handleMenuClose}
+                  sx={{ bgcolor: "black", color: "white" }}
+                >
+                  <NavLink
+                    to="/login"
+                    style={({ isActive }) =>
+                      isActive ? styles.navlinkActive : styles.navlink
+                    }
+                  >
+                    Login
+                  </NavLink>
+                </MenuItem>
+              </Menu>
             </>
           ) : (
             <IconButton
@@ -140,11 +191,6 @@ const styles = {
   },
   listItemsNavigation: {
     display: "flex",
-  },
-  listItems: {
-    display: "inline",
-    width: "auto",
-    padding: "0 1rem",
   },
   navlink: {
     textDecoration: "none",

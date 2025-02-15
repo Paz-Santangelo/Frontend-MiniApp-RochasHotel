@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Typography, Tooltip } from "@mui/material";
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
@@ -14,6 +14,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ContentPasteSearchIcon from "@mui/icons-material/ContentPasteSearch";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import InfoIcon from "@mui/icons-material/Info";
 
 const Sidenav = ({ userState, userDispatch }) => {
   const location = useLocation();
@@ -49,20 +50,20 @@ const Sidenav = ({ userState, userDispatch }) => {
             transition: "width 0.3s ease, height 0.3s ease",
           }}
           alt="profile photo"
-          src={userState.user?.imageUser.urlImage}
+          src={userState.user?.imageUser?.urlImage || ""}
         />
         {!collapsed ? (
           <>
             <Typography variant="body2" sx={{ mt: 1, color: "white" }}>
-              {userState.user?.name}
+              {userState.user?.name || "Usuario"}
             </Typography>
             <Typography variant="overline" sx={{ color: "white" }}>
-              {userState.user?.role}
+              {userState.user?.role || "Sin rol"}
             </Typography>
           </>
         ) : (
           <Typography variant="body2" sx={{ mt: 1, color: "white" }}>
-            {userState.user.name}
+            {userState.user?.name || "Usuario"}
           </Typography>
         )}
       </Box>
@@ -79,69 +80,117 @@ const Sidenav = ({ userState, userDispatch }) => {
           }),
         }}
       >
-        <MenuItem
-          routerLink={<Link to="/" />}
-          active={location.pathname === "/"}
-          icon={<AdminPanelSettingsIcon />}
+        <Tooltip
+          title="Mi Perfil"
+          placement="right"
+          disableHoverListener={!collapsed}
         >
-          <Typography variant="body2" sx={styles.link}>
-            Información
-          </Typography>
-        </MenuItem>
+          <MenuItem
+            routerLink={<Link to="/perfil" />}
+            active={location.pathname === "/perfil"}
+            icon={<AdminPanelSettingsIcon />}
+          >
+            {!collapsed && (
+              <Typography variant="body2" sx={styles.link}>
+                Mi Perfil
+              </Typography>
+            )}
+          </MenuItem>
+        </Tooltip>
 
-        <MenuItem
-          routerLink={<Link to="/perfil" />}
-          active={location.pathname === "/perfil"}
-          icon={<AdminPanelSettingsIcon />}
+        <Tooltip
+          title={userState.isAdmin ? "Habitaciones" : "Reservar"}
+          placement="right"
+          disableHoverListener={!collapsed}
         >
-          <Typography variant="body2" sx={styles.link}>
-            Mi Perfil
-          </Typography>
-        </MenuItem>
-
-        <MenuItem
-          routerLink={<Link to="/habitaciones" />}
-          active={location.pathname === "/habitaciones"}
-          icon={<HotelIcon />}
-        >
-          <Typography variant="body2" sx={styles.link}>
-            {userState.isAdmin ? "Habitaciones" : "Reservar"}
-          </Typography>
-        </MenuItem>
+          <MenuItem
+            routerLink={<Link to="/habitaciones" />}
+            active={location.pathname === "/habitaciones"}
+            icon={<HotelIcon />}
+          >
+            {!collapsed && (
+              <Typography variant="body2" sx={styles.link}>
+                {userState.isAdmin ? "Habitaciones" : "Reservar"}
+              </Typography>
+            )}
+          </MenuItem>
+        </Tooltip>
 
         {userState.isUser && (
-          <MenuItem
-            routerLink={<Link to="/reserva/buscar" />}
-            active={location.pathname === "/reserva/buscar"}
-            icon={<ContentPasteSearchIcon />}
+          <Tooltip
+            title="Buscar Reserva"
+            placement="right"
+            disableHoverListener={!collapsed}
           >
-            <Typography variant="body2" sx={styles.link}>
-              Buscar Reserva
-            </Typography>
-          </MenuItem>
+            <MenuItem
+              routerLink={<Link to="/reserva/buscar" />}
+              active={location.pathname === "/reserva/buscar"}
+              icon={<ContentPasteSearchIcon />}
+            >
+              {!collapsed && (
+                <Typography variant="body2" sx={styles.link}>
+                  Buscar Reserva
+                </Typography>
+              )}
+            </MenuItem>
+          </Tooltip>
         )}
 
-        <MenuItem
-          routerLink={<Link to="/reservas" />}
-          active={location.pathname === "/reservas"}
-          icon={<CalendarMonthIcon />}
+        <Tooltip
+          title={userState.isAdmin ? "Reservas" : "Mis Reservas"}
+          placement="right"
+          disableHoverListener={!collapsed}
         >
-          <Typography variant="body2" sx={styles.link}>
-            {userState.isAdmin ? "Reservas" : "Mis Reservas"}
-          </Typography>
-        </MenuItem>
+          <MenuItem
+            routerLink={<Link to="/reservas" />}
+            active={location.pathname === "/reservas"}
+            icon={<CalendarMonthIcon />}
+          >
+            {!collapsed && (
+              <Typography variant="body2" sx={styles.link}>
+                {userState.isAdmin ? "Reservas" : "Mis Reservas"}
+              </Typography>
+            )}
+          </MenuItem>
+        </Tooltip>
 
         {userState.isAdmin && (
-          <MenuItem
-            routerLink={<Link to="/usuarios" />}
-            active={location.pathname === "/usuarios"}
-            icon={<PeopleAltIcon />}
+          <Tooltip
+            title="Usuarios"
+            placement="right"
+            disableHoverListener={!collapsed}
           >
-            <Typography variant="body2" sx={styles.link}>
-              Usuarios
-            </Typography>
-          </MenuItem>
+            <MenuItem
+              routerLink={<Link to="/admin/usuarios" />}
+              active={location.pathname === "/admin/usuarios"}
+              icon={<PeopleAltIcon />}
+            >
+              {!collapsed && (
+                <Typography variant="body2" sx={styles.link}>
+                  Usuarios
+                </Typography>
+              )}
+            </MenuItem>
+          </Tooltip>
         )}
+
+        <Tooltip
+          title="Información"
+          placement="right"
+          disableHoverListener={!collapsed}
+        >
+          <MenuItem
+            routerLink={<Link to="/" />}
+            active={location.pathname === "/"}
+            icon={<InfoIcon />}
+          >
+            {!collapsed && (
+              <Typography variant="body2" sx={styles.link}>
+                Información
+              </Typography>
+            )}
+          </MenuItem>
+        </Tooltip>
       </Menu>
     </Sidebar>
   );

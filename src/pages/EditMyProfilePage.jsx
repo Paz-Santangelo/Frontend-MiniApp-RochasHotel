@@ -19,7 +19,7 @@ import {
 } from "../actions/userActions";
 import NotificationAlert from "../components/NotificationAlert";
 
-const EditMyProfile = () => {
+const EditMyProfilePage = () => {
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
   const navigate = useNavigate();
   const { user } = userState;
@@ -243,4 +243,4 @@ const styles = {
   button: { minWidth: 120 },
 };
 
-export default EditMyProfile;
+export default EditMyProfilePage;

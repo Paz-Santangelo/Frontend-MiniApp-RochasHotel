@@ -3,20 +3,17 @@ import { Box, Typography } from "@mui/material";
 const Hero = () => {
   return (
     <Box sx={styles.boxContainerHero}>
-      <Box
-        sx={styles.heroImage}
-      >
-        <img src="https://www.cadena3.com/admin/playerswf/fotos/ARCHI_8548831200x771.jpg" alt="Vista panorámica del hotel" />
-      </Box>
+      <img
+        src="https://www.cadena3.com/admin/playerswf/fotos/ARCHI_8548831200x771.jpg"
+        alt="Vista panorámica del hotel"
+        style={styles.heroImage}
+      />
 
       <Box sx={styles.heroContentContainer}>
         <Typography variant="h1" sx={styles.typogaphyTitle}>
           ¡Bienvenidos!
         </Typography>
-        <Typography
-          variant="subtitle1"
-          sx={styles.typographySubtitle}
-        >
+        <Typography variant="subtitle1" sx={styles.typographySubtitle}>
           Descansa, conecta y respira en Rocha Hotel, ubicado en el corazón de
           las sierras.
         </Typography>
@@ -29,8 +26,11 @@ const Hero = () => {
 const styles = {
   boxContainerHero: {
     position: "relative",
-    height: "calc(100vh)",
     width: "100%",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     overflow: "hidden",
   },
   heroImage: {
@@ -43,15 +43,13 @@ const styles = {
     zIndex: -1,
   },
   heroContentContainer: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    position: "relative",
     textAlign: "center",
     color: "white",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     padding: { xs: "1rem", md: "2rem" },
-    zIndex: 1,
+    borderRadius: "8px",
+    margin: "1rem",
   },
   typogaphyTitle: {
     fontSize: { xs: "2rem", md: "3.5rem" },
