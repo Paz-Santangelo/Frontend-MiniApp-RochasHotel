@@ -107,7 +107,7 @@ Se crearán en la carpeta `dist/`, listos para ser desplegados en un servidor.
 │   ├─ assets/
 │   ├─ components/
 │   ├─ pages/
-│   ├─ hooks/              # (si se usó para separar lógica con useReducer)
+│   ├─ hooks/
 │   ├─ App.jsx
 │   └─ main.jsx
 ├─ .eslintrc.js
